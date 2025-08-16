@@ -724,9 +724,11 @@ async function downloadPDF(){
   const title = labelForType(inv.type);
   doc.setTextColor(255,255,255);
   doc.setFont('helvetica','bold').setFontSize(18);
-  doc.text(title.toUpperCase(), M + 68, 56);
+  if (inv.bizName) doc.text(inv.bizName, M + 68, 56);
 
   doc.setFontSize(11).setFont('helvetica','normal');
+  doc.text(title, M + 68, 72);
+
   if (inv.invNumber) {
     const invNumW = doc.getTextWidth(inv.invNumber);
     doc.text(inv.invNumber, W - M - invNumW, 56);
@@ -734,7 +736,7 @@ async function downloadPDF(){
 
   // Biz + dates + PO
   doc.setTextColor(...INK); doc.setFontSize(12).setFont('helvetica','bold');
-  if (inv.bizName) doc.text(inv.bizName, M, 120);
+  // (company name now drawn in header next to logo)
   doc.setFont('helvetica','normal').setFontSize(10);
   doc.setTextColor(...MUTED);
   doc.text('Repairs • Parts • Diagnostics • Field Service', M, 136);
