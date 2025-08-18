@@ -729,7 +729,7 @@ async function downloadPDF(){
       let added = false;
       try { doc.addImage(logoEl, type, M, logoY, logoW, logoH); added = true; }
       catch { const dataURL = imgToDataURL(logoEl);
-              if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoW, logoH); added = true; } }
+              if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoH ? logoW : 56, logoH || 56); added = true; } }
       if (!added) console.warn('Logo could not be embedded into PDF.');
     }
   } catch (err) { console.warn('Logo could not be loaded for PDF', err); }
@@ -837,113 +837,39 @@ async function downloadPDF(){
   }
   wrapText(doc, inv.notes || (inv.type==='QUOTE' ? 'This quote is valid for 14 days.' : 'Thank you for your business.'), M, y+20, 420);
 
+  // --- Banking details (static) ---
+  (function renderBankingDetails(){
+    const pageH = doc.internal.pageSize.getHeight();
+    const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) ? doc.lastAutoTable.finalY : 0;
+
+    let bankY = Math.max(y + 60, lastTableY + 40, 120);
+    if (bankY > pageH - 140) {
+      doc.addPage();
+      bankY = 120;
+    }
+
+    // Optional subtle separator above block
+    doc.setDrawColor(229,231,235).setLineWidth(0.7);
+    doc.line(M, bankY - 10, W - M, bankY - 10);
+
+    doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
+    doc.text('Banking details', M, bankY);
+
+    doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
+    doc.text([
+      'Name: Nlci mining solution (pty)ltd',
+      'Bank: Capitec Business',
+      'Account number: 1054067155',
+      'Branch code: 450105'
+    ], M, bankY + 14);
+  })();
+
   // Footer
   doc.setFontSize(9).setTextColor(107,114,128);
   if (inv.bizEmail) doc.text(inv.bizEmail, M, 820);
 
   const filename = (inv.invNumber || title.replace(/\s+/g,'_')) + '.pdf';
   doc.save(filename);
-function downloadPDF(inv) {
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-  const M = 40; // left margin
-  const BRAND = [31, 41, 55];
-  const INK = [17, 24, 39];
-  const MUTED = [107, 114, 128];
-
-  let y = 40;
-
-  // Header
-  doc.setFont('helvetica', 'bold').setFontSize(20).setTextColor(...BRAND);
-  doc.text(inv.bizName || 'Invoice', M, y);
-  y += 24;
-  doc.setFont('helvetica', 'normal').setFontSize(10).setTextColor(...MUTED);
-  if (inv.bizAddress) doc.text(inv.bizAddress, M, y);
-  y += 12;
-  if (inv.bizPhone) doc.text(inv.bizPhone, M, y);
-
-  // Invoice meta
-  y += 30;
-  doc.setFont('helvetica', 'bold').setFontSize(14).setTextColor(...INK);
-  doc.text(inv.type || 'INVOICE', M, y);
-  y += 20;
-  doc.setFont('helvetica', 'normal').setFontSize(10);
-  doc.text(`Invoice #: ${inv.number}`, M, y);
-  y += 12;
-  doc.text(`Date: ${inv.date}`, M, y);
-
-  // Bill to
-  y += 30;
-  doc.setFont('helvetica', 'bold').setFontSize(12).setTextColor(...INK);
-  doc.text('Bill To:', M, y);
-  y += 14;
-  doc.setFont('helvetica', 'normal').setFontSize(10).setTextColor(...MUTED);
-  doc.text(inv.clientName || '', M, y);
-  y += 12;
-  if (inv.clientAddress) doc.text(inv.clientAddress, M, y);
-
-  // Items table
-  y += 30;
-  doc.autoTable({
-    startY: y,
-    head: [['Description', 'Qty', 'Price', 'Total']],
-    body: inv.items.map(item => [
-      item.description,
-      item.quantity,
-      item.price,
-      item.total
-    ]),
-    theme: 'grid',
-    styles: { font: 'helvetica', fontSize: 10 }
-  });
-
-  // Totals
-  let afterTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) || y + 20;
-  afterTableY += 20;
-  doc.setFont('helvetica', 'bold').setFontSize(10).setTextColor(...INK);
-  doc.text(`Subtotal: ${inv.subtotal}`, M, afterTableY);
-  afterTableY += 12;
-  doc.text(`Tax: ${inv.tax}`, M, afterTableY);
-  afterTableY += 12;
-  doc.text(`Total: ${inv.total}`, M, afterTableY);
-
-  // Payment + Notes
-  y = afterTableY + 30;
-  if (inv.payLink){
-    doc.setTextColor(...BRAND).textWithLink('Pay now', M, y, {url: inv.payLink});
-    doc.setTextColor(...INK);
-  }
-  wrapText(
-    doc,
-    inv.notes || (inv.type==='QUOTE' ? 'This quote is valid for 14 days.' : 'Thank you for your business.'),
-    M,
-    y+20,
-    420
-  );
-
-  // --- Added: Banking details block ---
-  const bankY = (doc.lastAutoTable && doc.lastAutoTable.finalY)
-    ? Math.max(y + 60, doc.lastAutoTable.finalY + 40)
-    : y + 60;
-
-  doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
-  doc.text('Banking Details', M, bankY);
-
-  doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
-  const bankLines = [
-    'Name: Nlci mining solution (Pty) Ltd',
-    'Bank: Capitec Business',
-    'Account number: 1054067155',
-    'Branch code: 450105'
-  ];
-  doc.text(bankLines, M, bankY + 14);
-
-  // Footer
-  doc.setFontSize(9).setTextColor(107,114,128);
-  if (inv.bizEmail) doc.text(inv.bizEmail, M, 820);
-
-  doc.save(`${inv.type || 'invoice'}-${inv.number}.pdf`);
-}
-
 }
 </script>
 </body>
