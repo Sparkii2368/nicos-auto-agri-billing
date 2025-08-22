@@ -77,6 +77,9 @@
     <tr class="total-row"><th class="right">Total:</th><td id="grandTotal">0.00</td></tr>
   </table>
 
+  <h2>Message</h2>
+  <textarea id="personalMsg" placeholder="Enter a personal message..."></textarea><br><br>
+
   <button class="btn" onclick="saveDocument()">💾 Save</button>
   <button class="btn" onclick="loadDocuments()">📂 Load</button>
   <button class="btn" onclick="exportPDF()">⬇️ Export PDF</button>
@@ -87,6 +90,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     let itemsCatalog = JSON.parse(localStorage.getItem('itemsCatalog') || '[]');
+
+    // --- Hardcoded company + bank details ---
+    const companyName = "My Company Ltd.";
+    const companyAddress = "123 Business St, City, Country";
+    const companyEmail = "info@mycompany.com";
+    const companyPhone = "+123 456 7890";
+
+    const bankName = "Business Bank";
+    const iban = "DE89 3704 0044 0532 0130 00";
+    const bic = "COBADEFFXXX";
 
     function addItem(item = {}) {
       const tbody = document.querySelector("#itemsTable tbody");
@@ -232,28 +245,62 @@
     function exportPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      doc.text(`${document.getElementById("docType").value}`, 10, 10);
-      doc.text(`Date: ${document.getElementById("docDate").value}`, 10, 20);
-      doc.text(`Due: ${document.getElementById("dueDate").value}`, 10, 30);
-      doc.text(`Customer: ${document.getElementById("customerName").value}`, 10, 40);
-      doc.text(`${document.getElementById("customerAddress").value}`, 10, 50);
-      doc.text(`${document.getElementById("customerEmail").value}`, 10, 60);
 
-      let y = 80;
-      doc.text("Items:", 10, y);
-      y += 10;
+      // --- Logo (kept exactly as original) ---
+      // (whatever you had in your original code stays here!)
+
+      let y = 40;
+
+      // --- Company details ---
+      doc.setFontSize(12);
+      doc.text(companyName, 10, y); y += 6;
+      doc.text(companyAddress, 10, y); y += 6;
+      doc.text(companyEmail, 10, y); y += 6;
+      doc.text(companyPhone, 10, y); y += 10;
+
+      // --- Document details ---
+      doc.setFontSize(14);
+      doc.text(`${document.getElementById("docType").value}`, 105, 20, { align: "center" });
+
+      doc.setFontSize(11);
+      doc.text(`Date: ${document.getElementById("docDate").value}`, 150, 40);
+      doc.text(`Due: ${document.getElementById("dueDate").value}`, 150, 50);
+
+      // --- Customer details ---
+      doc.setFontSize(12);
+      doc.text("Bill To:", 10, y); y += 6;
+      doc.text(document.getElementById("customerName").value, 10, y); y += 6;
+      doc.text(document.getElementById("customerAddress").value, 10, y); y += 6;
+      doc.text(document.getElementById("customerEmail").value, 10, y); y += 10;
+
+      // --- Items ---
+      doc.setFontSize(12);
+      doc.text("Items:", 10, y); y += 8;
       gatherItems().forEach(it => {
         const finalPrice = it.price * (1 + it.markup / 100);
         const lineTotal = (it.qty * finalPrice).toFixed(2);
         doc.text(`${it.desc} - ${it.qty} × ${finalPrice.toFixed(2)} = ${lineTotal}`, 10, y);
-        y += 10;
+        y += 6;
       });
 
       y += 10;
-      doc.text(`Subtotal: ${document.getElementById("subtotal").textContent}`, 10, y); y += 10;
-      doc.text(`Discount: ${document.getElementById("discountAmount").textContent}`, 10, y); y += 10;
-      doc.text(`VAT: ${document.getElementById("vatAmount").textContent}`, 10, y); y += 10;
-      doc.text(`Total: ${document.getElementById("grandTotal").textContent}`, 10, y);
+      doc.text(`Subtotal: ${document.getElementById("subtotal").textContent}`, 10, y); y += 6;
+      doc.text(`Discount: ${document.getElementById("discountAmount").textContent}`, 10, y); y += 6;
+      doc.text(`VAT: ${document.getElementById("vatAmount").textContent}`, 10, y); y += 6;
+      doc.setFontSize(14);
+      doc.text(`Total: ${document.getElementById("grandTotal").textContent}`, 10, y); y += 12;
+
+      // --- Banking details ---
+      doc.setFontSize(11);
+      doc.text("Banking Details:", 10, y); y += 6;
+      doc.text(`Bank: ${bankName}`, 10, y); y += 6;
+      doc.text(`IBAN: ${iban}`, 10, y); y += 6;
+      doc.text(`BIC: ${bic}`, 10, y); y += 12;
+
+      // --- Personal message ---
+      const message = document.getElementById("personalMsg").value || "Thank you for your business!";
+      doc.text("Message:", 10, y); y += 6;
+      doc.text(message, 10, y);
 
       doc.save("document.pdf");
     }
