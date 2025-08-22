@@ -47,8 +47,8 @@
 <body>
 
 <nav>
-  <button id="tabCreate" class="active">Create</button>
-  <button id="tabRecords">Records</button>
+  <button id="tabCreate" class="active" aria-label="Create new document">Create</button>
+  <button id="tabRecords" aria-label="View saved records">Records</button>
 </nav>
 
 <section id="createView" class="sheet">
@@ -67,24 +67,24 @@
   <div class="card">
     <div class="row">
       <div class="col-3">
-        <label>Document type</label>
-        <select id="docType">
+        <label for="docType">Document type</label>
+        <select id="docType" aria-label="Document type">
           <option value="QUOTE">Quote</option>
           <option value="PRO_FORMA">Pro forma invoice</option>
           <option value="TAX_INVOICE" selected>Tax invoice</option>
         </select>
       </div>
       <div class="col-3">
-        <label>Customer order number</label>
+        <label for="customerPO">Customer order number</label>
         <input id="customerPO" placeholder="Customer PO / Order #" />
       </div>
       <div class="col-3">
-        <label>Document no.</label>
-        <input id="invNumber" />
+        <label for="invNumber">Document no.</label>
+        <input id="invNumber" aria-label="Document number" />
       </div>
       <div class="col-3">
-        <label>Currency</label>
-        <select id="currency">
+        <label for="currency">Currency</label>
+        <select id="currency" aria-label="Currency">
           <option value="ZAR" selected>ZAR (R)</option>
           <option value="USD">USD ($)</option>
           <option value="EUR">EUR (€)</option>
@@ -92,15 +92,15 @@
       </div>
 
       <div class="col-4">
-        <label>Invoice date</label>
+        <label for="invDate">Invoice date</label>
         <input id="invDate" type="date" />
       </div>
       <div class="col-4">
-        <label>Due date</label>
+        <label for="dueDate">Due date</label>
         <input id="dueDate" type="date" />
       </div>
       <div class="col-4">
-        <label>VAT % <span class="pill">SA default 15%</span></label>
+        <label for="vatRate">VAT % <span class="pill">SA default 15%</span></label>
         <input id="vatRate" type="number" step="0.01" value="15" />
       </div>
     </div>
@@ -109,40 +109,40 @@
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label>Your business</label>
+        <label for="bizName">Your business</label>
         <input id="bizName" value="Nico's Auto & Agri" readonly />
         <input id="bizDetails" value="Tel: 079 568 1706 / 067 277 0183" placeholder="Tel: 079 568 1706 / 067 277 0183" />
         <input id="bizEmail" value="nicosauto@outlook.com" placeholder="nicosauto@outlook.com" />
-        <label>Company address</label>
+        <label for="bizAddress">Company address</label>
         <input id="bizAddress" value="98 Diemeer Str, Welgelegen, Polokwane, 0699" placeholder="98 Diemeer Str, Welgelegen, Polokwane, 0699" />
-        <label>VAT number</label>
+        <label for="bizVAT">VAT number</label>
         <input id="bizVAT" placeholder="4xxxxxxxxx" />
       </div>
       <div class="col-6">
         <div class="row">
           <div class="col-12">
-            <label>Client Company Name</label>
+            <label for="clientCompany">Client Company Name</label>
             <input id="clientCompany" placeholder="Full company name" />
           </div>
           <div class="col-12">
-            <label>Company Representative</label>
+            <label for="clientRep">Company Representative</label>
             <input id="clientRep" placeholder="Person handling this order" />
           </div>
           <div class="col-12">
-            <label>VAT Number</label>
+            <label for="clientVAT">VAT Number</label>
             <input id="clientVAT" placeholder="ZA VAT or international VAT" />
           </div>
           <div class="col-12">
-            <label>Company Address</label>
+            <label for="clientAddress">Company Address</label>
             <input id="clientAddress" placeholder="Street, City, Postal code" />
           </div>
           <div class="col-6">
-            <label>Email</label>
+            <label for="clientEmail">Email</label>
             <input id="clientEmail" placeholder="email@client.com" />
           </div>
           <div class="col-6">
-            <label>Saved clients</label>
-            <select id="clientPicker"><option value="">— Select saved —</option></select>
+            <label for="clientPicker">Saved clients</label>
+            <select id="clientPicker" aria-label="Saved clients"><option value="">— Select saved —</option></select>
           </div>
         </div>
         <div class="actions" style="margin-top:6px">
@@ -155,20 +155,20 @@
 
   <div class="card">
     <label>Line items</label>
-    <table id="itemsTbl">
+    <table id="itemsTbl" aria-label="Line items table">
       <thead>
         <tr>
           <th style="width:42%">Description</th>
           <th>Qty</th>
           <th>Unit price</th>
           <th class="right">Line total</th>
-          <th></th>
+          <th aria-label="Actions"></th>
         </tr>
       </thead>
       <tbody id="itemsBody"></tbody>
       <tfoot>
         <tr>
-          <td colspan="5"><button class="btn outline" id="addItem" type="button">Add item</button></td>
+          <td colspan="5"><button class="btn outline" id="addItem" type="button" aria-label="Add item">Add item</button></td>
         </tr>
       </tfoot>
     </table>
@@ -177,13 +177,13 @@
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label>Notes</label>
+        <label for="notes">Notes</label>
         <textarea id="notes" placeholder="Thank you for your business. Payment due within 7 days."></textarea>
-        <label>Payment link (optional)</label>
+        <label for="payLink">Payment link (optional)</label>
         <input id="payLink" placeholder="https://pay.yourdomain.co.za/invoice/..." />
       </div>
       <div class="col-6">
-        <table>
+        <table aria-label="Totals">
           <tr><td>Subtotal</td><td class="right" id="subtotal">R 0.00</td></tr>
           <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" /></td></tr>
           <tr><td>VAT</td><td class="right" id="vat">R 0.00</td></tr>
@@ -214,27 +214,27 @@
   </header>
 
   <div class="search">
-    <input id="searchBox" placeholder="Search client, number, amount..." />
+    <input id="searchBox" placeholder="Search client, number, amount..." aria-label="Search records" />
     <button class="btn outline" id="refreshBtn" type="button">Refresh</button>
   </div>
 
   <div class="card">
     <h3>Quotes</h3>
-    <table id="tblQuotes">
+    <table id="tblQuotes" aria-label="Quotes table">
       <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
   <div class="card">
     <h3>Pro forma invoices</h3>
-    <table id="tblProforma">
+    <table id="tblProforma" aria-label="Pro forma table">
       <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
   <div class="card">
     <h3>Tax invoices</h3>
-    <table id="tblTax">
+    <table id="tblTax" aria-label="Tax invoices table">
       <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
@@ -245,12 +245,20 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.3/dist/jspdf.plugin.autotable.min.js"></script>
 <script>
+/* =====================================================
+   HELPERS & CONFIG
+===================================================== */
 const $ = sel => document.querySelector(sel);
 const itemsBody = () => document.querySelector('#itemsBody');
+const debounce = (fn, delay=250) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; };
 
 const fmt = (v, c) => {
   const sym = c==='USD'?'$':c==='EUR'?'€':'R';
   return `${sym} ${Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
+};
+const money = (v, c) => {
+  const sym = c==='USD'?'$':c==='EUR'?'€':'R';
+  return `${sym} ${Number(v||0).toFixed(2)}`;
 };
 
 const numberConfig = {
@@ -264,7 +272,9 @@ const storage = {
   clientsKey: 'clients'
 };
 
-/* ---------- Nav ---------- */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 $('#tabCreate').addEventListener('click', ()=>showView('create'));
 $('#tabRecords').addEventListener('click', ()=>showView('records'));
 function showView(which){
@@ -273,6 +283,8 @@ function showView(which){
     $('#recordsView').classList.add('hidden');
     $('#tabCreate').classList.add('active');
     $('#tabRecords').classList.remove('active');
+    // focus first editable field for UX
+    setTimeout(()=>{ const el = $('#customerPO') || $('#clientCompany'); el && el.focus(); }, 0);
   } else {
     refreshRecords();
     $('#createView').classList.add('hidden');
@@ -282,18 +294,24 @@ function showView(which){
   }
 }
 
-/* ---------- Ready helper ---------- */
+/* =====================================================
+   READY
+===================================================== */
 function onReady(fn){
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
   else fn();
 }
 
-/* ---------- Init ---------- */
+/* =====================================================
+   INIT
+===================================================== */
 onReady(() => {
+  // Initialize counters first time
   Object.values(numberConfig).forEach(cfg=>{
     if (!localStorage.getItem(cfg.counterKey)) localStorage.setItem(cfg.counterKey,'1');
   });
 
+  // Event bindings
   $('#currency').addEventListener('change', updateTotals);
   ['vatRate','discountRate'].forEach(id => document.querySelector('#' + id).addEventListener('input', updateTotals));
   $('#addItem').addEventListener('click', addItem);
@@ -306,7 +324,7 @@ onReady(() => {
   $('#saveClientBtn').addEventListener('click', onSaveClient);
   $('#deleteClientBtn').addEventListener('click', onDeleteClient);
   $('#refreshBtn').addEventListener('click', refreshRecords);
-  $('#searchBox').addEventListener('input', refreshRecords);
+  $('#searchBox').addEventListener('input', debounce(refreshRecords, 200));
 
   loadClients();
   autoSetup();
@@ -314,7 +332,9 @@ onReady(() => {
   updateTotals();
 });
 
-/* ---------- Clients (company/rep/VAT + migration) ---------- */
+/* =====================================================
+   CLIENTS (company/rep/VAT + migration)
+===================================================== */
 function clientLabel(c){
   const company = c.company || c.name || '';
   return c.rep ? `${company} — ${c.rep}` : company;
@@ -344,7 +364,10 @@ function setClientForm(c = {}){
 }
 
 function loadClients(){
-  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
+  let clients;
+  try {
+    clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
+  } catch { clients = []; }
   let changed = false;
   clients = clients.map(c => {
     if (c && !('company' in c) && ('name' in c)) {
@@ -367,7 +390,40 @@ function onClientPick(){
   setClientForm(c);
 }
 
-/* ---------- Numbers & dates ---------- */
+function onSaveClient(){
+  const c = getClientFormValues();
+  if (!(c.company||'').trim()){
+    alert('Enter a client company name before saving.');
+    return;
+  }
+  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
+  const existingIdx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
+  if (existingIdx >= 0) clients[existingIdx] = c; else clients.push(c);
+  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
+  loadClients();
+  // set select to this client
+  const idx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
+  if (idx>=0) $('#clientPicker').value = String(idx);
+  alert('Client saved.');
+}
+
+function onDeleteClient(){
+  const selVal = $('#clientPicker').value;
+  if (!selVal){ alert('Select a saved client to delete.'); return; }
+  const idx = parseInt(selVal,10);
+  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
+  const c = clients[idx];
+  if (!c){ alert('Client not found.'); return; }
+  if (!confirm(`Delete saved client "${clientLabel(c)}"?`)) return;
+  clients.splice(idx,1);
+  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
+  loadClients();
+  alert('Client deleted.');
+}
+
+/* =====================================================
+   NUMBERS & DATES
+===================================================== */
 function autoSetup(){
   const now = luxon.DateTime.now().toISODate();
   $('#invDate').value = now;
@@ -395,7 +451,9 @@ function incCounter(cfg){
   localStorage.setItem(cfg.counterKey, String(n));
 }
 
-/* ---------- Items & totals ---------- */
+/* =====================================================
+   ITEMS & TOTALS
+===================================================== */
 function addItem(desc='', qty=1, price=0){
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -403,7 +461,7 @@ function addItem(desc='', qty=1, price=0){
     <td><input class="qty" type="number" step="0.01" value="${qty}"></td>
     <td><input class="price" type="number" step="0.01" value="${price}"></td>
     <td class="right lineTotal">R 0.00</td>
-    <td class="right"><button class="btn outline del" type="button">✕</button></td>
+    <td class="right"><button class="btn outline del" type="button" aria-label="Remove item">✕</button></td>
   `;
   itemsBody().appendChild(tr);
   tr.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
@@ -450,7 +508,9 @@ function getTotals(){
   return {subtotal, discount, vat, grand};
 }
 
-/* ---------- Save / records ---------- */
+/* =====================================================
+   SAVE / RECORDS
+===================================================== */
 function readForm(){
   const client = getClientFormValues();
   return {
@@ -461,10 +521,10 @@ function readForm(){
     bizAddress: $('#bizAddress').value,
     bizVAT: $('#bizVAT').value,
     ...client,
-    invNumber: $('#invNumber').value.trim(),
+    invNumber: ($('#invNumber').value||'').trim(),
     invDate: $('#invDate').value,
     dueDate: $('#dueDate').value,
-    customerPO: $('#customerPO').value.trim(),
+    customerPO: ($('#customerPO').value||'').trim(),
     currency: $('#currency').value,
     vatRate: parseFloat($('#vatRate').value)||0,
     discountRate: parseFloat($('#discountRate').value)||0,
@@ -501,7 +561,9 @@ function writeForm(d){
 }
 
 function saveDoc(inv){
-  const list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]');
+  let list;
+  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
+  catch { list = []; }
   const idx = list.findIndex(x => x.invNumber === inv.invNumber && x.type === inv.type);
   if (idx>=0) list[idx] = inv; else list.push(inv);
   localStorage.setItem(storage.docsKey, JSON.stringify(list));
@@ -533,6 +595,9 @@ function resetFormForNext(type){
   itemsBody().innerHTML = '';
   addItem(); addItem();
   updateTotals();
+
+  // focus PO for quick entry
+  setTimeout(()=>$('#customerPO')?.focus(), 0);
 }
 
 function onSaveClick(){
@@ -595,7 +660,9 @@ function labelForType(t){
   return t==='QUOTE'?'Quote':(t==='PRO_FORMA'?'Pro forma invoice':'Tax invoice');
 }
 
-/* ---------- Convert to invoice ---------- */
+/* =====================================================
+   CONVERT TO INVOICE
+===================================================== */
 async function onConvertToInvoice(){
   const current = readForm();
   if (!(current.company || current.clientCompany || current.clientName || current.name)){ alert('Enter client details first'); return; }
@@ -617,7 +684,9 @@ async function onConvertToInvoice(){
   alert('Converted to tax invoice.');
 }
 
-/* ---------- Records view ---------- */
+/* =====================================================
+   RECORDS VIEW
+===================================================== */
 function refreshRecords(){
   const qBody = $('#tblQuotes tbody');
   const pBody = $('#tblProforma tbody');
@@ -625,7 +694,11 @@ function refreshRecords(){
   [qBody,pBody,tBody].forEach(tb=>tb.innerHTML='');
   const q = ($('#searchBox').value||'').toLowerCase();
 
-  const list = (JSON.parse(localStorage.getItem(storage.docsKey)||'[]')).sort((a,b)=>b.savedAt-a.savedAt);
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(storage.docsKey)||'[]'); }
+  catch { list = []; }
+  list.sort((a,b)=>b.savedAt-a.savedAt);
+
   list.forEach(d=>{
     const row = document.createElement('tr');
     const total = d.totals?.grand || 0;
@@ -639,7 +712,7 @@ function refreshRecords(){
       <td class="right">${fmt(total, d.currency||'ZAR')}</td>
       <td>${d.status||'open'}</td>
       <td class="table-actions">
-        <button data-num="${d.invNumber}" data-type="${d.type}" class="openBtn">Open</button>
+        <button data-num="${d.invNumber}" data-type="${d.type}" class="openBtn" type="button">Open</button>
       </td>`;
     if (d.type==='QUOTE') qBody.appendChild(row);
     else if (d.type==='PRO_FORMA') pBody.appendChild(row);
@@ -654,9 +727,9 @@ function refreshRecords(){
   }));
 }
 
-/* ---------- PDF generation (logo-safe) ---------- */
-function money(v,c){ const sym = c==='USD'?'$':c==='EUR'?'€':'R'; return `${sym} ${Number(v||0).toFixed(2)}`; }
-
+/* =====================================================
+   PDF GENERATION (logo-safe)
+===================================================== */
 function wrapText(doc, text, x, y, maxW){
   const lines = doc.splitTextToSize(text || '', maxW);
   doc.text(lines, x, y);
@@ -714,7 +787,7 @@ async function downloadPDF(){
     doc.text(inv.invNumber, W - M - invNumW, 56);
   }
 
-  // Move down: logo + company name on one baseline (letterhead feel)
+  // Move down: logo + company name
   doc.setTextColor(...INK);
   let logoW = 0, logoH = 0;
   const logoY = bandH + 24; // push logo below the band
@@ -728,8 +801,10 @@ async function downloadPDF(){
       const type = detectImgType(logoEl.src);
       let added = false;
       try { doc.addImage(logoEl, type, M, logoY, logoW, logoH); added = true; }
-      catch { const dataURL = imgToDataURL(logoEl);
-              if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoH ? logoW : 56, logoH || 56); added = true; } }
+      catch {
+        const dataURL = imgToDataURL(logoEl);
+        if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoW, logoH); added = true; }
+      }
       if (!added) console.warn('Logo could not be embedded into PDF.');
     }
   } catch (err) { console.warn('Logo could not be loaded for PDF', err); }
