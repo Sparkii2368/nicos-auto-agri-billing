@@ -576,7 +576,7 @@ function gatherItems(){
     const m = parseFloat(r.querySelector('.markup')?.value) || 0;
     const adj = base * (1 + (m/100));
     return { d, q, p: adj, basePrice: base, markup: m, total: q * adj };
-  }).filter(i => i.d || i.q || i.basePrice || i.markup);
+  })
 }
 
 function updateTotals(){

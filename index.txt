@@ -70,6 +70,7 @@
     position: relative;
     padding: 8px 12px;
     text-align: left;
+    margin-bottom: 10px; /* extra breathing room */
   }
   #itemsTbl td::before {
     content: attr(data-label);
@@ -94,12 +95,38 @@
     right: 0;
     background: #fff;
     z-index: 9;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.06); /* subtle float effect */
   }
   .sheet {
     padding-bottom: 60px; /* room for nav */
   }
+
+  /* Keep number fields compact for faster entry */
+  #itemsTbl input.qty,
+  #itemsTbl input.price,
+  #itemsTbl input.markup {
+    max-width: 140px;
+  }
+
+  /* Match tap‑target comfort for buttons */
+  .btn, .btn.outline {
+    padding: 14px 18px;
+  }
+
+  /* Ensure remove ✕ button is easy to hit on touch devices */
+  #itemsTbl td[data-label="Actions"] .btn {
+    padding: 10px 14px;
+    font-size: 1.1rem;
+  }
+
+  /* Accessibility: label inputs for screen readers */
+  #itemsTbl td[data-label] input {
+    aria-label: attr(data-label);
+  }
 }
+
 </style>
+
 
 </head>
 <body>
