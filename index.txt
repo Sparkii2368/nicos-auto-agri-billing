@@ -569,14 +569,22 @@ function addItem(desc='', qty=1, basePrice=0, markup=0){
 
 function gatherItems(){
   const rows = [...itemsBody().querySelectorAll('tr')];
-  return rows.map(r => {
-    const d = r.querySelector('.desc').value.trim();
-    const q = parseFloat(r.querySelector('.qty').value) || 0;
-    const base = parseFloat(r.querySelector('.price').value) || 0;
-    const m = parseFloat(r.querySelector('.markup')?.value) || 0;
-    const adj = base * (1 + (m/100));
-    return { d, q, p: adj, basePrice: base, markup: m, total: q * adj };
-  }).filter(i => i.d || i.q || i.basePrice || i.markup);
+  return rows
+    .map(r => {
+      const d    = r.querySelector('.desc').value.trim();
+      const q    = parseFloat(r.querySelector('.qty').value)   || 0;
+      const base = parseFloat(r.querySelector('.price').value) || 0;
+      const m    = parseFloat(r.querySelector('.markup')?.value) || 0;
+      
+      const vatRate      = parseFloat($('#vatRate').value) || 0;
+      const vatPortion   = base * (vatRate / 100);
+      const costInclVAT  = base + vatPortion;
+      const markupAmount = base * (m / 100);
+      const adj          = costInclVAT + markupAmount;
+
+      return { d, q, p: adj, basePrice: base, markup: m, total: q * adj };
+    })
+    .filter(i => i.d || i.q || i.basePrice || i.markup);
 }
 
 function updateTotals(){
