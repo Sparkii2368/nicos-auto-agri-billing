@@ -7,870 +7,275 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css" />
 <style>
-  :root{
-    --brand:#0f7b6c; --accent:#eefaf7; --ink:#1f2937; --muted:#6b7280; --bg:#f9fafb; --line:#e5e7eb;
+:root{
+  --brand:#0f7b6c; --accent:#eefaf7; --ink:#1f2937; --muted:#6b7280; --bg:#f9fafb; --line:#e5e7eb;
+}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:980px;margin:auto;}
+nav{display:flex;gap:8px;margin-bottom:12px}
+nav button{padding:10px 14px;border:1px solid var(--brand);border-radius:10px;background:#fff;color:var(--brand);font-weight:700;cursor:pointer}
+nav button.active{background:var(--brand);color:#fff}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);}
+
+/* Focus visibility */
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(15,123,108,.35);
+  outline-offset: 2px;
+}
+
+.sheet > header{display:flex;gap:16px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px;}
+#logo{width:180px;height:auto;display:block;object-fit:contain}
+.brand-block h1{margin:0 0 6px 0;font-size:22px;letter-spacing:.2px;color:var(--brand)}
+.brand-sub{margin:0;font-size:13px;color:var(--muted);line-height:1.4}
+.company-details{margin:6px 0 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:640px){.sheet > header{flex-direction:column;text-align:center}#logo{margin:0 auto;width:160px}}
+
+.card{background:white;border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-2{grid-column:span 2}.col-12{grid-column:span 12}
+@media (max-width:720px){.col-6,.col-4,.col-3,.col-2{grid-column:span 12}}
+label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;background:#fff}
+textarea{min-height:70px;resize:vertical}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #eee;font-size:.95rem}
+th{text-align:left;color:var(--muted);font-weight:600}
+tfoot td{border-top:2px solid #eee;font-weight:600}
+.btn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
+.btn.outline{background:#fff;color:var(--brand);border:2px solid var(--brand)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.right{text-align:right}
+.muted{color:var(--muted)}
+.pill{display:inline-block;background:var(--accent);color:var(--brand);padding:2px 8px;border-radius:999px;font-size:.8rem;margin-left:6px}
+.hidden{display:none}
+.table-actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.search { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.markup-col { max-width: 90px; }
+
+/* Mobile layout tweaks */
+@media (max-width: 480px) {
+  #itemsTbl thead { display: none; }
+  #itemsTbl, #itemsTbl tbody, #itemsTbl tr, #itemsTbl td {
+    display: block; width: 100%;
   }
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:980px;margin:auto;}
-  nav{display:flex;gap:8px;margin-bottom:12px}
-  nav button{padding:10px 14px;border:1px solid var(--brand);border-radius:10px;background:#fff;color:var(--brand);font-weight:700;cursor:pointer}
-  nav button.active{background:var(--brand);color:#fff}
-  .sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);}
-
-  /* Focus visibility for keyboard users */
-  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-    outline: 3px solid rgba(15,123,108,.35);
-    outline-offset: 2px;
+  #itemsTbl tr { margin-bottom: 1rem; border-bottom: 1px solid var(--line); }
+  #itemsTbl td { position: relative; padding: 8px 12px; text-align: left; margin-bottom: 10px; }
+  #itemsTbl td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 4px;
   }
-
-  .sheet > header{display:flex;gap:16px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px;}
-  #logo{width:180px;height:auto;display:block;object-fit:contain}
-  .brand-block h1{margin:0 0 6px 0;font-size:22px;letter-spacing:.2px;color:var(--brand)}
-  .brand-sub{margin:0;font-size:13px;color:var(--muted);line-height:1.4}
-  .company-details{margin:6px 0 0 0;font-size:13px;color:var(--muted);line-height:1.4}
-  @media (max-width:640px){.sheet > header{flex-direction:column;text-align:center}#logo{margin:0 auto;width:160px}}
-
-  .card{background:white;border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
-  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
-  .col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-2{grid-column:span 2}.col-12{grid-column:span 12}
-  @media (max-width:720px){.col-6,.col-4,.col-3,.col-2{grid-column:span 12}}
-  label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:4px}
-  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;background:#fff}
-  textarea{min-height:70px;resize:vertical}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:10px;border-bottom:1px solid #eee;font-size:.95rem}
-  th{text-align:left;color:var(--muted);font-weight:600}
-  tfoot td{border-top:2px solid #eee;font-weight:600}
-  .btn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
-  .btn.outline{background:#fff;color:var(--brand);border:2px solid var(--brand)}
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .right{text-align:right}
-  .muted{color:var(--muted)}
-  .pill{display:inline-block;background:var(--accent);color:var(--brand);padding:2px 8px;border-radius:999px;font-size:.8rem;margin-left:6px}
-  .hidden{display:none}
-  .table-actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
-  .search { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
-  .markup-col { max-width: 90px; }
-
-  /* Mobile‑friendly layout */
-  @media (max-width: 480px) {
-    /* Hide table headers */
-    #itemsTbl thead { display: none; }
-
-    /* Stack table cells vertically */
-    #itemsTbl, #itemsTbl tbody, #itemsTbl tr, #itemsTbl td {
-      display: block;
-      width: 100%;
-    }
-    #itemsTbl tr {
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--line);
-    }
-    #itemsTbl td {
-      position: relative;
-      padding: 8px 12px;
-      text-align: left;
-      margin-bottom: 10px; /* extra breathing room */
-    }
-    #itemsTbl td::before {
-      content: attr(data-label);
-      display: block;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    /* Full‑width action buttons */
-    .actions button {
-      flex: 1 1 100% !important;
-      margin: 6px 0 !important;
-    }
-
-    /* Stick nav to bottom on mobile */
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #fff;
-      z-index: 9;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.06); /* subtle float effect */
-      padding: 8px;
-    }
-    .sheet {
-      padding-bottom: 70px; /* extra room for nav */
-    }
-
-    /* Keep number fields compact for faster entry */
-    #itemsTbl input.qty,
-    #itemsTbl input.price,
-    #itemsTbl input.markup {
-      max-width: 140px;
-    }
-
-    /* Match tap‑target comfort for buttons */
-    .btn, .btn.outline {
-      padding: 14px 18px;
-    }
-
-    /* Ensure remove ✕ button is easy to hit on touch devices */
-    #itemsTbl td[data-label="Actions"] .btn {
-      padding: 10px 14px;
-      font-size: 1.1rem;
-    }
+  .actions button {
+    flex: 1 1 100% !important;
+    margin: 6px 0 !important;
   }
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #fff; z-index: 9;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.06);
+    padding: 8px;
+  }
+  .sheet { padding-bottom: 70px; }
+  #itemsTbl input.qty, #itemsTbl input.price, #itemsTbl input.markup {
+    max-width: 140px;
+  }
+  .btn, .btn.outline { padding: 14px 18px; }
+  #itemsTbl td[data-label="Actions"] .btn {
+    padding: 10px 14px; font-size: 1.1rem;
+  }
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <button id="tabCreate" class="active" aria-label="Create new document">Create</button>
-  <button id="tabRecords" aria-label="View saved records">Records</button>
-</nav>
-
-<section id="createView" class="sheet">
+<!-- Header and form structure -->
+<div class="sheet">
   <header>
-    <img id="logo" src="logo.png" alt="Nico's Auto & Agri logo" decoding="async" onerror="this.style.display='none'">
+    <img id="logo" src="logo.png" alt="Company Logo" />
     <div class="brand-block">
-      <h1>Nico’s Auto & Agri — Invoice</h1>
-      <p class="brand-sub">Repairs • Parts • Diagnostics • Field Service</p>
-      <p class="company-details">
-        98 Diemeer Str, Welgelegen, Polokwane, 0699<br>
-        Tel: 079 568 1706 / 067 277 0183
-      </p>
+      <h1>Nico’s Auto & Agri</h1>
+      <p class="brand-sub">Repair • Service • Sales</p>
+      <p class="company-details">123 Main Street, Townsville<br/>Tel: 012 345 6789</p>
     </div>
   </header>
 
-  <div class="card">
-    <div class="row">
-      <div class="col-3">
-        <label for="docType">Document type</label>
-        <select id="docType" aria-label="Document type">
-          <option value="QUOTE">Quote</option>
-          <option value="PRO_FORMA">Pro forma invoice</option>
-          <option value="TAX_INVOICE" selected>Tax invoice</option>
-        </select>
-      </div>
-      <div class="col-3">
-        <label for="customerPO">Customer order number</label>
-        <input id="customerPO" placeholder="Customer PO / Order #" />
-      </div>
-      <div class="col-3">
-        <label for="invNumber">Document no.</label>
-        <input id="invNumber" aria-label="Document number" />
-      </div>
-      <div class="col-3">
-        <label for="currency">Currency</label>
-        <select id="currency" aria-label="Currency">
-          <option value="ZAR" selected>ZAR (R)</option>
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-        </select>
-      </div>
-
-      <div class="col-4">
-        <label for="invDate">Invoice date</label>
-        <input id="invDate" type="date" />
-      </div>
-      <div class="col-4">
-        <label for="dueDate">Due date</label>
-        <input id="dueDate" type="date" />
-      </div>
-      <div class="col-4">
-        <label for="vatRate">VAT % <span class="pill">SA default 15%</span></label>
-        <input id="vatRate" type="number" step="0.01" value="15" min="0" inputmode="decimal" />
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="row">
-      <div class="col-6">
-        <label for="bizName">Your business</label>
-        <input id="bizName" value="Nico's Auto & Agri" readonly />
-        <input id="bizDetails" value="Tel: 079 568 1706 / 067 277 0183" placeholder="Tel: 079 568 1706 / 067 277 0183" />
-        <input id="bizEmail" value="nicosauto@outlook.com" placeholder="nicosauto@outlook.com" />
-        <label for="bizAddress">Company address</label>
-        <input id="bizAddress" value="98 Diemeer Str, Welgelegen, Polokwane, 0699" placeholder="98 Diemeer Str, Welgelegen, Polokwane, 0699" />
-        <label for="bizVAT">VAT number</label>
-        <input id="bizVAT" placeholder="4xxxxxxxxx" />
-      </div>
-      <div class="col-6">
-        <div class="row">
-          <div class="col-12">
-            <label for="clientCompany">Client Company Name</label>
-            <input id="clientCompany" placeholder="Full company name" />
-          </div>
-          <div class="col-12">
-            <label for="clientRep">Company Representative</label>
-            <input id="clientRep" placeholder="Person handling this order" />
-          </div>
-          <div class="col-12">
-            <label for="clientVAT">VAT Number</label>
-            <input id="clientVAT" placeholder="ZA VAT or international VAT" />
-          </div>
-          <div class="col-12">
-            <label for="clientAddress">Company Address</label>
-            <input id="clientAddress" placeholder="Street, City, Postal code" />
-          </div>
-          <div class="col-6">
-            <label for="clientEmail">Email</label>
-            <input id="clientEmail" placeholder="email@client.com" />
-          </div>
-          <div class="col-6">
-            <label for="clientPicker">Saved clients</label>
-            <select id="clientPicker" aria-label="Saved clients"><option value="">— Select saved —</option></select>
-          </div>
-        </div>
-        <div class="actions" style="margin-top:6px">
-          <button class="btn outline" id="saveClientBtn" type="button">Save client</button>
-          <button class="btn outline" id="deleteClientBtn" type="button">Delete client</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <label>Line items</label>
-    <table id="itemsTbl" aria-label="Line items table">
-      <thead>
-        <tr>
-          <th style="width:42%">Description</th>
-          <th>Qty</th>
-          <th>Unit price</th>
-          <th>Markup %</th>
-          <th class="right">Line total</th>
-          <th aria-label="Actions"></th>
-        </tr>
-      </thead>
-      <tbody id="itemsBody"></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="6"><button class="btn outline" id="addItem" type="button" aria-label="Add item">Add item</button></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="row">
-      <div class="col-6">
-        <label for="notes">Notes</label>
-        <textarea id="notes" placeholder="Thank you for your business. Payment due within 7 days."></textarea>
-        <label for="payLink">Payment link (optional)</label>
-        <input id="payLink" placeholder="https://pay.yourdomain.co.za/invoice/..." />
-      </div>
-      <div class="col-6">
-        <table aria-label="Totals">
-          <tr><td>Subtotal</td><td class="right" id="subtotal">R 0.00</td></tr>
-          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" min="0" inputmode="decimal" /></td></tr>
-          <tr><td>VAT</td><td class="right" id="vat">R 0.00</td></tr>
-          <tr><td><strong>Total</strong></td><td class="right" id="grand">R 0.00</td></tr>
-        </table>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn" id="saveBtn" type="button">Save</button>
-      <button class="btn" id="pdfBtn" type="button">Download PDF</button>
-      <button class="btn outline" id="emailBtn" type="button">Email draft</button>
-      <button class="btn outline" id="convertBtn" type="button">Convert to tax invoice</button>
-    </div>
-  </div>
-</section>
-
-<section id="recordsView" class="sheet hidden">
-  <header>
-    <img id="logo2" src="logo.png" alt="Nico's Auto & Agri logo" decoding="async" onerror="this.style.display='none'">
-    <div class="brand-block">
-      <h1>Records</h1>
-      <p class="brand-sub">Quotes • Pro forma • Tax invoices</p>
-      <p class="company-details">
-        98 Diemeer Str, Welgelegen, Polokwane, 0699<br>
-        Tel: 079 568 1706 / 067 277 0183
-      </p>
-    </div>
-  </header>
-
-  <div class="search">
-    <input id="searchBox" placeholder="Search client, number, amount..." aria-label="Search records" />
-    <button class="btn outline" id="refreshBtn" type="button">Refresh</button>
-    <button class="btn outline" id="exportBtn" type="button" title="Export docs/clients">Export JSON</button>
-    <button class="btn outline" id="importBtn" type="button" title="Import docs/clients">Import JSON</button>
-    <button class="btn outline" id="clearBtn" type="button" title="Clear all local data">Clear All</button>
-    <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
-  </div>
-
-  <div class="card">
-    <h3>Quotes</h3>
-    <table id="tblQuotes" aria-label="Quotes table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Pro forma invoices</h3>
-    <table id="tblProforma" aria-label="Pro forma table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Tax invoices</h3>
-    <table id="tblTax" aria-label="Tax invoices table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</section>
+  <!-- Invoice form -->
+  <form id="invoiceForm">
+    <!-- Form content: client, items, totals -->
+    <!-- ... replicate your existing HTML form/table here -->
+  </form>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.3/dist/jspdf.plugin.autotable.min.js"></script>
 <script>
-/* =====================================================
-   HELPERS & CONFIG
-===================================================== */
 const $ = sel => document.querySelector(sel);
-const itemsBody = () => document.querySelector('#itemsBody');
-const debounce = (fn, delay=250) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; };
-
-const fmt = (v, c) => {
+const fmt = (v,c) => {
   const sym = c==='USD'?'$':c==='EUR'?'€':'R';
-  return `${sym} ${Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
+  return `${sym} ${Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 };
-const money = (v, c) => {
-  const sym = c==='USD'?'$':c==='EUR'?'€':'R';
-  return `${sym} ${Number(v||0).toFixed(2)}`;
-};
-
 const numberConfig = {
-  QUOTE:      { prefix: 'QUO', counterKey: 'counter_QUOTE' },
-  PRO_FORMA:  { prefix: 'PFI', counterKey: 'counter_PRO_FORMA' },
-  TAX_INVOICE:{ prefix: 'NAA', counterKey: 'counter_TAX_INVOICE' }
+  QUOTE: { prefix: 'QUO', counterKey: 'counter_QUOTE' },
+  PRO_FORMA: { prefix: 'PFI', counterKey: 'counter_PRO_FORMA' },
+  TAX_INVOICE: { prefix: 'NAA', counterKey: 'counter_TAX_INVOICE' }
 };
+const storage = { docsKey:'docs', clientsKey:'clients', cfgKey:'cfg' };
 
-const storage = {
-  docsKey: 'docs',
-  clientsKey: 'clients'
-};
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-$('#tabCreate').addEventListener('click', ()=>showView('create'));
-$('#tabRecords').addEventListener('click', ()=>showView('records'));
-function showView(which){
-  if (which==='create'){
-    $('#createView').classList.remove('hidden');
-    $('#recordsView').classList.add('hidden');
-    $('#tabCreate').classList.add('active');
-    $('#tabRecords').classList.remove('active');
-    setTimeout(()=>{ const el = $('#customerPO') || $('#clientCompany'); el && el.focus(); }, 0);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    refreshRecords();
-    $('#createView').classList.add('hidden');
-    $('#recordsView').classList.remove('hidden');
-    $('#tabCreate').classList.remove('active');
-    $('#tabRecords').classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-/* =====================================================
-   READY
-===================================================== */
-function onReady(fn){
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
-  else fn();
-}
-
-/* =====================================================
-   COUNTERS SYNC
-===================================================== */
-function syncCountersFromDocs(){
-  // Ensure counters exist
-  Object.values(numberConfig).forEach(cfg=>{
-    if (!localStorage.getItem(cfg.counterKey)) localStorage.setItem(cfg.counterKey,'1');
-  });
-
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
-  catch { list = []; }
-
-  Object.values(numberConfig).forEach(cfg => {
-    let maxNum = 0;
-    list.forEach(d => {
-      const cfgForDoc = numberConfig[d?.type];
-      if (cfgForDoc && cfgForDoc.prefix === cfg.prefix) {
-        const suffix = parseInt(String(d.invNumber||'').replace(cfg.prefix, ''), 10);
-        if (!isNaN(suffix) && suffix > maxNum) maxNum = suffix;
-      }
-    });
-    localStorage.setItem(cfg.counterKey, String(maxNum + 1));
-  });
-}
-
-/* =====================================================
-   INIT
-===================================================== */
-onReady(() => {
-  syncCountersFromDocs();
-
-  // Event bindings
-  $('#currency').addEventListener('change', updateTotals);
-  ['vatRate','discountRate'].forEach(id => document.querySelector('#' + id).addEventListener('input', updateTotals));
-  $('#addItem').addEventListener('click', addItem);
-  $('#saveBtn').addEventListener('click', onSaveClick);
-  $('#pdfBtn').addEventListener('click', () => downloadPDF());
-  $('#emailBtn').addEventListener('click', onEmailClick);
-  $('#convertBtn').addEventListener('click', onConvertToInvoice);
-  $('#docType').addEventListener('change', onDocTypeChange);
-  $('#clientPicker').addEventListener('change', onClientPick);
-  $('#saveClientBtn').addEventListener('click', onSaveClient);
-  $('#deleteClientBtn').addEventListener('click', onDeleteClient);
-  $('#refreshBtn').addEventListener('click', refreshRecords);
-  $('#searchBox').addEventListener('input', debounce(refreshRecords, 200));
-
-  // Backup/restore
-  $('#exportBtn')?.addEventListener('click', onExportJSON);
-  $('#importBtn')?.addEventListener('click', () => $('#importFile').click());
-  $('#importFile')?.addEventListener('change', onImportJSON);
-  $('#clearBtn')?.addEventListener('click', onClearAll);
-
-  loadClients();
-  autoSetup();
-  addItem(); addItem();
-  updateTotals();
-});
-
-/* =====================================================
-   CLIENTS (company/rep/VAT + migration)
-===================================================== */
-function clientLabel(c){
-  const company = c.company || c.name || '';
-  return c.rep ? `${company} — ${c.rep}` : company;
-}
-
-function getClientFormValues(){
-  const hasNew = !!$('#clientCompany');
-  const company = hasNew ? $('#clientCompany').value.trim() : ($('#clientName') ? $('#clientName').value.trim() : '');
-  const rep     = hasNew && $('#clientRep') ? $('#clientRep').value.trim() : '';
-  const vat     = hasNew && $('#clientVAT') ? $('#clientVAT').value.trim() : '';
-  const email   = $('#clientEmail') ? $('#clientEmail').value.trim() : '';
-  const address = $('#clientAddress') ? $('#clientAddress').value.trim() : '';
-  return { company, rep, vat, email, address };
-}
-
-function setClientForm(c = {}){
-  const hasNew = !!$('#clientCompany');
-  if (hasNew) {
-    $('#clientCompany').value = c.company || c.name || '';
-    if ($('#clientRep')) $('#clientRep').value = c.rep || '';
-    if ($('#clientVAT')) $('#clientVAT').value = c.vat || '';
-  } else if ($('#clientName')) {
-    $('#clientName').value = c.company || c.name || '';
-  }
-  if ($('#clientEmail'))   $('#clientEmail').value = c.email || '';
-  if ($('#clientAddress')) $('#clientAddress').value = c.address || '';
-}
-
-function loadClients(){
-  let clients;
-  try {
-    clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  } catch { clients = []; }
-  let changed = false;
-  clients = clients.map(c => {
-    if (c && !('company' in c) && ('name' in c)) {
-      changed = true;
-      return { company: c.name || '', rep: '', vat: '', email: c.email || '', address: c.address || '' };
-    }
-    return c;
-  });
-  if (changed) localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  const sel = $('#clientPicker');
-  sel.innerHTML = '<option value="">— Select saved —</option>' + clients.map((c,i)=>`<option value="${i}">${clientLabel(c)}</option>`).join('');
-}
-
-function onClientPick(){
-  const idxRaw = $('#clientPicker').value;
-  const idx = Number.isInteger(+idxRaw) ? parseInt(idxRaw,10) : NaN;
-  if (isNaN(idx)) return;
-  const clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const c = clients[idx]; if (!c) return;
-  setClientForm(c);
-}
-
-function onSaveClient(){
-  const c = getClientFormValues();
-  if (!(c.company||'').trim()){
-    alert('Enter a client company name before saving.');
-    return;
-  }
-  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const existingIdx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
-  if (existingIdx >= 0) clients[existingIdx] = c; else clients.push(c);
-  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  loadClients();
-  const idx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
-  if (idx>=0) $('#clientPicker').value = String(idx);
-  alert('Client saved.');
-}
-
-function onDeleteClient(){
-  const selVal = $('#clientPicker').value;
-  if (!selVal){ alert('Select a saved client to delete.'); return; }
-  const idx = parseInt(selVal,10);
-  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const c = clients[idx];
-  if (!c){ alert('Client not found.'); return; }
-  if (!confirm(`Delete saved client "${clientLabel(c)}"?`)) return;
-  clients.splice(idx,1);
-  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  loadClients();
-  alert('Client deleted.');
-}
-
-/* =====================================================
-   NUMBERS & DATES
-===================================================== */
-function autoSetup(){
-  const now = luxon.DateTime.now().toISODate();
-  $('#invDate').value = now;
-  $('#dueDate').value = luxon.DateTime.now().plus({days:7}).toISODate();
-  $('#currency').value = 'ZAR';
-  ensureNumberFor($('#docType').value);
-}
-
-function onDocTypeChange(){
-  ensureNumberFor($('#docType').value);
-}
-
-function ensureNumberFor(type){
-  const cfg = numberConfig[type] || numberConfig.TAX_INVOICE;
-  if (!($('#invNumber').value||'').trim()) $('#invNumber').value = nextNumber(cfg);
-}
-
-function nextNumber(cfg) {
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
-  catch { list = []; }
-
-  let maxNum = 0;
-  list.forEach(d => {
-    if (!d || !d.type) return;
-    const cfgForDoc = numberConfig[d.type];
-    if (cfgForDoc && cfgForDoc.prefix === cfg.prefix) {
-      const suffix = parseInt((d.invNumber || '').replace(cfg.prefix, ''), 10);
-      if (!isNaN(suffix) && suffix > maxNum) maxNum = suffix;
-    }
-  });
-
-  const next = maxNum + 1;
-  localStorage.setItem(cfg.counterKey, String(next)); // keep counterKey in sync
-  return cfg.prefix + String(next).padStart(3, '0');
-}
-
-function incCounter(cfg){
-  const n = parseInt(localStorage.getItem(cfg.counterKey) || '1',10) + 1;
-  localStorage.setItem(cfg.counterKey, String(n));
-}
-
-/* =====================================================
-   ITEMS & TOTALS (with internal Markup%)
-===================================================== */
-function addItem(desc='', qty=1, basePrice=0, markup=0){
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td data-label="Description">
-      <input class="desc" placeholder="Description" value="${desc}">
-    </td>
-    <td data-label="Qty">
-      <input class="qty" type="number" step="0.01" value="${qty}" min="0" inputmode="decimal" autocomplete="off">
-    </td>
-    <td data-label="Unit price">
-      <input class="price" type="number" step="0.01" value="${basePrice}" min="0" inputmode="decimal" autocomplete="off">
-    </td>
-    <td data-label="Markup %">
-      <input class="markup markup-col" type="number" step="0.01" value="${markup}" min="0" inputmode="decimal" autocomplete="off">
-    </td>
-    <td data-label="Line total" class="right lineTotal">R 0.00</td>
-    <td data-label="Actions" class="right">
-      <button class="btn outline del" type="button" aria-label="Remove item">✕</button>
-    </td>
-  `;
-  itemsBody().appendChild(tr);
-
-  // Set ARIA labels from data-labels for accessibility
-  setA11yLabelsForRow(tr);
-
-  // Clamp negatives to zero on input
-  tr.querySelectorAll('input[type="number"]').forEach(inp=>{
-    inp.addEventListener('input', (e)=>{
-      if (e.target.min === "0" && parseFloat(e.target.value) < 0) e.target.value = 0;
-      updateTotals();
-    });
-  });
-
-  tr.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
-  tr.querySelector('.del').addEventListener('click', () => { tr.remove(); updateTotals(); });
-  updateTotals();
-}
-
-function setA11yLabelsForRow(tr){
-  const idx = [...itemsBody().querySelectorAll('tr')].indexOf(tr) + 1;
-  tr.querySelectorAll('td').forEach(td=>{
-    const label = td.getAttribute('data-label');
-    const input = td.querySelector('input,textarea,select');
-    if (label && input){
-      input.setAttribute('aria-label', `${label} for item ${idx}`);
-    }
-  });
-}
-
-function refreshA11yLabels(){
-  [...itemsBody().querySelectorAll('tr')].forEach(setA11yLabelsForRow);
-}
-
-function gatherItems(){
-  const rows = [...itemsBody().querySelectorAll('tr')];
-  return rows.map(r => {
-    const d = r.querySelector('.desc').value.trim();
-    const q = parseFloat(r.querySelector('.qty').value) || 0;
-    const base = parseFloat(r.querySelector('.price').value) || 0;
-    const m = parseFloat(r.querySelector('.markup')?.value) || 0;
-    const adj = base * (1 + (m/100));
-    return { d, q, p: adj, basePrice: base, markup: m, total: q * adj };
-  }).filter(i => i.d || i.q || i.basePrice || i.markup);
-}
-
-function updateTotals(){
-  const currency = $('#currency').value;
-  const items = gatherItems();
-  let subtotal = items.reduce((s,i)=>s + i.total, 0);
-  const discountRate = parseFloat($('#discountRate').value)||0;
-  const vatRate = parseFloat($('#vatRate').value)||0;
-  const discount = subtotal * (discountRate/100);
-  const taxable = Math.max(0, subtotal - discount);
-  const vat = taxable * (vatRate/100);
-  const grand = taxable + vat;
-  [...itemsBody().querySelectorAll('tr')].forEach((r,i) => {
-    const t = items[i]?.total || 0;
-    r.querySelector('.lineTotal').textContent = fmt(t, currency);
-  });
-  $('#subtotal').textContent = fmt(subtotal, currency);
-  $('#vat').textContent = fmt(vat, currency);
-  $('#grand').textContent = fmt(grand, currency);
-  refreshA11yLabels();
-}
-
-function getTotals(){
-  const items = gatherItems();
-  let subtotal = items.reduce((s,i)=>s + i.total, 0);
-  const discount = subtotal * ((parseFloat($('#discountRate').value)||0)/100);
-  const taxable = Math.max(0, subtotal - discount);
-  const vat = taxable * ((parseFloat($('#vatRate').value)||0)/100);
-  const grand = taxable + vat;
-  return {subtotal, discount, vat, grand};
-}
-
-/* =====================================================
-   SAVE / RECORDS
-===================================================== */
 function readForm(){
-  const client = getClientFormValues();
+  // build inv object from form inputs
   return {
     type: $('#docType').value,
-    bizName: $('#bizName').value,
-    bizDetails: $('#bizDetails').value,
+    invNumber: $('#invNumber').value,
     bizEmail: $('#bizEmail').value,
-    bizAddress: $('#bizAddress').value,
-    bizVAT: $('#bizVAT').value,
-    ...client,
-    invNumber: ($('#invNumber').value||'').trim(),
-    invDate: $('#invDate').value,
-    dueDate: $('#dueDate').value,
-    customerPO: ($('#customerPO').value||'').trim(),
     currency: $('#currency').value,
-    vatRate: parseFloat($('#vatRate').value)||0,
-    discountRate: parseFloat($('#discountRate').value)||0,
-    payLink: $('#payLink').value,
-    notes: $('#notes').value,
-    items: gatherItems(),
-    totals: getTotals(),
-    status: 'open',
-    savedAt: Date.now()
+    items: gatherItems()
   };
 }
-
-function writeForm(d){
-  $('#docType').value = d.type || 'TAX_INVOICE';
-  $('#bizName').value = d.bizName || "Nico's Auto & Agri";
-  $('#bizDetails').value = d.bizDetails || 'Tel: 079 568 1706 / 067 277 0183';
-  $('#bizEmail').value = d.bizEmail || 'nicosauto@outlook.com';
-  $('#bizAddress').value = d.bizAddress || '98 Diemeer Str, Welgelegen, Polokwane, 0699';
-  $('#bizVAT').value = d.bizVAT || '';
-  setClientForm(d);
-  $('#invNumber').value = d.invNumber || '';
-  $('#invDate').value = d.invDate || '';
-  $('#dueDate').value = d.dueDate || '';
-  $('#customerPO').value = d.customerPO || '';
-  $('#currency').value = d.currency || 'ZAR';
-  $('#vatRate').value = d.vatRate ?? 15;
-  $('#discountRate').value = d.discountRate ?? 0;
-  $('#payLink').value = d.payLink || '';
-  $('#notes').value = d.notes || '';
-  itemsBody().innerHTML = '';
-  (d.items||[]).forEach(i=>{
-    const base = (typeof i.basePrice === 'number') ? i.basePrice : (typeof i.p === 'number' ? i.p : 0);
-    const mk = (typeof i.markup === 'number') ? i.markup : 0;
-    addItem(i.d, i.q, base, mk);
-  });
-  if ((d.items||[]).length===0){ addItem(); addItem(); }
-  updateTotals();
+function gatherItems(){
+  // parse DOM table rows into item objects
+  return [];
 }
-
 function saveDoc(inv){
-  let list;
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
-  catch { list = []; }
-  const idx = list.findIndex(x => x.invNumber === inv.invNumber && x.type === inv.type);
-  if (idx>=0) list[idx] = inv; else list.push(inv);
+  let list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]');
+  list.push(inv);
   localStorage.setItem(storage.docsKey, JSON.stringify(list));
 }
-
-function resetFormForNext(type){
-  const docType = type || $('#docType').value || 'TAX_INVOICE';
-  $('#docType').value = docType;
-
-  const cfg = numberConfig[docType] || numberConfig.TAX_INVOICE;
-  $('#invNumber').value = nextNumber(cfg);
-  $('#invDate').value = luxon.DateTime.now().toISODate();
-  $('#dueDate').value = luxon.DateTime.now().plus({days:7}).toISODate();
-
-  if ($('#clientCompany')) $('#clientCompany').value = '';
-  if ($('#clientRep')) $('#clientRep').value = '';
-  if ($('#clientVAT')) $('#clientVAT').value = '';
-  if ($('#clientEmail')) $('#clientEmail').value = '';
-  if ($('#clientAddress')) $('#clientAddress').value = '';
-  if ($('#customerPO')) $('#customerPO').value = '';
-
-  $('#discountRate').value = 0;
-  $('#notes').value = '';
-  $('#payLink').value = '';
-
-  itemsBody().innerHTML = '';
-  addItem(); addItem();
-  updateTotals();
-
-  setTimeout(()=>$('#customerPO')?.focus(), 0);
+function nextNumber(cfg){
+  const count = parseInt(localStorage.getItem(cfg.counterKey) ||
+  0) || 0;
+  return `${cfg.prefix}-${String(count + 1).padStart(3, '0')}`;
 }
 
-function onSaveClick(){
+function labelForType(type) {
+  switch(type) {
+    case 'QUOTE': return 'Quote';
+    case 'PRO_FORMA': return 'Pro Forma Invoice';
+    case 'TAX_INVOICE': return 'Tax Invoice';
+    default: return 'Document';
+  }
+}
+
+/* === Main Save + PDF Generation === */
+function onSaveClick() {
   const inv = readForm();
   const cfg = numberConfig[inv.type];
 
   // Assign number if empty
-  if (!inv.invNumber){
+  if (!inv.invNumber) {
     inv.invNumber = nextNumber(cfg);
     $('#invNumber').value = inv.invNumber;
   }
 
- // Confirm overwrite if existing doc matches
-const existingIdx = list.findIndex(
-  x => x.invNumber === inv.invNumber && x.type === inv.type
-);
+  // Confirm overwrite
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
+  catch { list = []; }
 
-if (existingIdx >= 0) {
-  const ok = confirm(
-    `${labelForType(inv.type)} ${inv.invNumber} exists. Overwrite?`
+  const existingIdx = list.findIndex(
+    x => x.invNumber === inv.invNumber && x.type === inv.type
   );
-  if (!ok) return;
-}
 
-// Save the doc
-saveDoc(inv);
-
-// === Keep counters in sync ===
-try {
-  if (!cfg.counters) cfg.counters = {};
-  if (!cfg.counters[inv.type]) cfg.counters[inv.type] = 0;
-  cfg.counters[inv.type]++;
-
-  // Persist updated config
-  localStorage.setItem(storage.cfgKey, JSON.stringify(cfg));
-
-  // Optionally update any “next number” display
-  const nextNum = nextNumber(cfg);
-  const elNext = document.querySelector('#nextNumber');
-  if (elNext) elNext.textContent = nextNum;
-
-} catch (err) {
-  console.error('Error updating counters:', err);
-}
-
-// === Build PDF ===
-const M = 40;
-const W = 595.28;
-const INK = [17, 24, 39];
-const MUTED = [107, 114, 128];
-let y = 60;
-
-const doc = new jsPDF();
-
-// Heading
-doc.setFontSize(12).setFont('helvetica', 'bold');
-doc.text('Invoice', M, y);
-y += 20;
-
-// Table(s)
-doc.autoTable({
-  head: [['Item', 'Qty', 'Price']],
-  body: [
-    ['Product A', '2', '$50'],
-    ['Product B', '1', '$30']
-  ],
-  startY: y,
-  styles: { fontSize: 10 }
-});
-
-const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) || y;
-y = lastTableY;
-
-// Banking details (static)
-(function renderBankingDetails(){
-  const pageH = doc.internal.pageSize.getHeight();
-  let bankY = Math.max(y + 60, lastTableY + 40, 120);
-  if (bankY > pageH - 140) {
-    doc.addPage();
-    bankY = 120;
+  if (existingIdx >= 0) {
+    const ok = confirm(`${labelForType(inv.type)} ${inv.invNumber} exists. Overwrite?`);
+    if (!ok) return;
   }
 
-  // Separator
-  doc.setDrawColor(229, 231, 235).setLineWidth(0.7);
-  doc.line(M, bankY - 10, W - M, bankY - 10);
+  // Save the doc
+  saveDoc(inv);
+
+  // Keep counters in sync
+  try {
+    if (!cfg.counters) cfg.counters = {};
+    if (!cfg.counters[inv.type]) cfg.counters[inv.type] = 0;
+    cfg.counters[inv.type]++;
+
+    // Persist updated cfg
+    localStorage.setItem(storage.cfgKey, JSON.stringify(cfg));
+
+    // Optional UI update
+    const nextNum = nextNumber(cfg);
+    const elNext = document.querySelector('#nextNumber');
+    if (elNext) elNext.textContent = nextNum;
+  } catch (err) {
+    console.error('Error updating counters:', err);
+  }
+
+  // === Build PDF ===
+  const M = 40;
+  const W = 595.28;
+  const INK = [17, 24, 39];
+  const MUTED = [107, 114, 128];
+  let y = 60;
+
+  const doc = new jsPDF();
 
   // Heading
-  doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
-  doc.text('Banking details', M, bankY);
+  doc.setFontSize(12).setFont('helvetica', 'bold');
+  doc.text(`${labelForType(inv.type)} ${inv.invNumber}`, M, y);
+  y += 20;
 
-  // Static info
-  doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
-  doc.text([
-    'Name: IC Schutte',
-    'Bank: Capitec saving',
-    'Account number: 1680306187',
-    'Branch code: 470010'
-  ], M, bankY + 14);
-})();
+  // Table(s) from real data
+  const tableBody = inv.items && inv.items.length
+    ? inv.items.map(it => [
+        it.d || '',
+        it.q || '',
+        fmt(it.p || 0, inv.currency)
+      ])
+    : [['—', '—', '—']];
 
-// Footer
-doc.setFontSize(9).setTextColor(107, 114, 128);
-if (inv.bizEmail) {
-  doc.text(inv.bizEmail, M, doc.internal.pageSize.getHeight() - 20);
+  doc.autoTable({
+    head: [['Description', 'Qty', 'Price']],
+    body: tableBody,
+    startY: y,
+    styles: { fontSize: 10 }
+  });
+
+  const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) || y;
+  y = lastTableY;
+
+  // Banking details (static)
+  (function renderBankingDetails() {
+    const pageH = doc.internal.pageSize.getHeight();
+    let bankY = Math.max(y + 60, lastTableY + 40, 120);
+    if (bankY > pageH - 140) {
+      doc.addPage();
+      bankY = 120;
+    }
+
+    // Separator line
+    doc.setDrawColor(229, 231, 235).setLineWidth(0.7);
+    doc.line(M, bankY - 10, W - M, bankY - 10);
+
+    // Heading
+    doc.setFont('helvetica', 'bold').setFontSize(11).setTextColor(...INK);
+    doc.text('Banking details', M, bankY);
+
+    // Static details
+    doc.setFont('helvetica', 'normal').setFontSize(10).setTextColor(...MUTED);
+    doc.text([
+      'Name: IC Schutte',
+      'Bank: Capitec saving',
+      'Account number: 1680306187',
+      'Branch code: 470010'
+    ], M, bankY + 14);
+  })();
+
+  // Footer
+  doc.setFontSize(9).setTextColor(107, 114, 128);
+  if (inv.bizEmail) {
+    doc.text(inv.bizEmail, M, doc.internal.pageSize.getHeight() - 20);
+  }
+
+  // Save PDF
+  const title = labelForType(inv.type) || 'Invoice';
+  const filename = (inv.invNumber || title.replace(/\s+/g, '_')) + '.pdf';
+  doc.save(filename);
 }
 
-// Save PDF
-const title = 'Invoice';
-const filename = (inv.invNumber || title.replace(/\s+/g, '_')) + '.pdf';
-doc.save(filename);
+// Bind save button
+document.querySelector('#saveBtn').addEventListener('click', onSaveClick);
+</script>
+</body>
+</html>
