@@ -1,4 +1,3 @@
-// this is the begining
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,6 +15,13 @@
   nav button{padding:10px 14px;border:1px solid var(--brand);border-radius:10px;background:#fff;color:var(--brand);font-weight:700;cursor:pointer}
   nav button.active{background:var(--brand);color:#fff}
   .sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);}
+
+  /* Focus visibility for keyboard users */
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 3px solid rgba(15,123,108,.35);
+    outline-offset: 2px;
+  }
+
   .sheet > header{display:flex;gap:16px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px;}
   #logo{width:180px;height:auto;display:block;object-fit:contain}
   .brand-block h1{margin:0 0 6px 0;font-size:22px;letter-spacing:.2px;color:var(--brand)}
@@ -42,8 +48,76 @@
   .pill{display:inline-block;background:var(--accent);color:var(--brand);padding:2px 8px;border-radius:999px;font-size:.8rem;margin-left:6px}
   .hidden{display:none}
   .table-actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
-  .search{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-  .markup-col{max-width:90px}
+  .search { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .markup-col { max-width: 90px; }
+
+  /* Mobile‑friendly layout */
+  @media (max-width: 480px) {
+    /* Hide table headers */
+    #itemsTbl thead { display: none; }
+
+    /* Stack table cells vertically */
+    #itemsTbl, #itemsTbl tbody, #itemsTbl tr, #itemsTbl td {
+      display: block;
+      width: 100%;
+    }
+    #itemsTbl tr {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    #itemsTbl td {
+      position: relative;
+      padding: 8px 12px;
+      text-align: left;
+      margin-bottom: 10px; /* extra breathing room */
+    }
+    #itemsTbl td::before {
+      content: attr(data-label);
+      display: block;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    /* Full‑width action buttons */
+    .actions button {
+      flex: 1 1 100% !important;
+      margin: 6px 0 !important;
+    }
+
+    /* Stick nav to bottom on mobile */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      z-index: 9;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.06); /* subtle float effect */
+      padding: 8px;
+    }
+    .sheet {
+      padding-bottom: 70px; /* extra room for nav */
+    }
+
+    /* Keep number fields compact for faster entry */
+    #itemsTbl input.qty,
+    #itemsTbl input.price,
+    #itemsTbl input.markup {
+      max-width: 140px;
+    }
+
+    /* Match tap‑target comfort for buttons */
+    .btn, .btn.outline {
+      padding: 14px 18px;
+    }
+
+    /* Ensure remove ✕ button is easy to hit on touch devices */
+    #itemsTbl td[data-label="Actions"] .btn {
+      padding: 10px 14px;
+      font-size: 1.1rem;
+    }
+  }
 </style>
 </head>
 <body>
@@ -103,7 +177,7 @@
       </div>
       <div class="col-4">
         <label for="vatRate">VAT % <span class="pill">SA default 15%</span></label>
-        <input id="vatRate" type="number" step="0.01" value="15" />
+        <input id="vatRate" type="number" step="0.01" value="15" min="0" inputmode="decimal" />
       </div>
     </div>
   </div>
@@ -188,7 +262,7 @@
       <div class="col-6">
         <table aria-label="Totals">
           <tr><td>Subtotal</td><td class="right" id="subtotal">R 0.00</td></tr>
-          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" /></td></tr>
+          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" min="0" inputmode="decimal" /></td></tr>
           <tr><td>VAT</td><td class="right" id="vat">R 0.00</td></tr>
           <tr><td><strong>Total</strong></td><td class="right" id="grand">R 0.00</td></tr>
         </table>
@@ -219,6 +293,10 @@
   <div class="search">
     <input id="searchBox" placeholder="Search client, number, amount..." aria-label="Search records" />
     <button class="btn outline" id="refreshBtn" type="button">Refresh</button>
+    <button class="btn outline" id="exportBtn" type="button" title="Export docs/clients">Export JSON</button>
+    <button class="btn outline" id="importBtn" type="button" title="Import docs/clients">Import JSON</button>
+    <button class="btn outline" id="clearBtn" type="button" title="Clear all local data">Clear All</button>
+    <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
   </div>
 
   <div class="card">
@@ -286,14 +364,15 @@ function showView(which){
     $('#recordsView').classList.add('hidden');
     $('#tabCreate').classList.add('active');
     $('#tabRecords').classList.remove('active');
-    // focus first editable field for UX
     setTimeout(()=>{ const el = $('#customerPO') || $('#clientCompany'); el && el.focus(); }, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     refreshRecords();
     $('#createView').classList.add('hidden');
     $('#recordsView').classList.remove('hidden');
     $('#tabCreate').classList.remove('active');
     $('#tabRecords').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
@@ -306,13 +385,36 @@ function onReady(fn){
 }
 
 /* =====================================================
-   INIT
+   COUNTERS SYNC
 ===================================================== */
-onReady(() => {
-  // Initialize counters first time
+function syncCountersFromDocs(){
+  // Ensure counters exist
   Object.values(numberConfig).forEach(cfg=>{
     if (!localStorage.getItem(cfg.counterKey)) localStorage.setItem(cfg.counterKey,'1');
   });
+
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
+  catch { list = []; }
+
+  Object.values(numberConfig).forEach(cfg => {
+    let maxNum = 0;
+    list.forEach(d => {
+      const cfgForDoc = numberConfig[d?.type];
+      if (cfgForDoc && cfgForDoc.prefix === cfg.prefix) {
+        const suffix = parseInt(String(d.invNumber||'').replace(cfg.prefix, ''), 10);
+        if (!isNaN(suffix) && suffix > maxNum) maxNum = suffix;
+      }
+    });
+    localStorage.setItem(cfg.counterKey, String(maxNum + 1));
+  });
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+onReady(() => {
+  syncCountersFromDocs();
 
   // Event bindings
   $('#currency').addEventListener('change', updateTotals);
@@ -328,6 +430,12 @@ onReady(() => {
   $('#deleteClientBtn').addEventListener('click', onDeleteClient);
   $('#refreshBtn').addEventListener('click', refreshRecords);
   $('#searchBox').addEventListener('input', debounce(refreshRecords, 200));
+
+  // Backup/restore
+  $('#exportBtn')?.addEventListener('click', onExportJSON);
+  $('#importBtn')?.addEventListener('click', () => $('#importFile').click());
+  $('#importFile')?.addEventListener('change', onImportJSON);
+  $('#clearBtn')?.addEventListener('click', onClearAll);
 
   loadClients();
   autoSetup();
@@ -404,7 +512,6 @@ function onSaveClient(){
   if (existingIdx >= 0) clients[existingIdx] = c; else clients.push(c);
   localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
   loadClients();
-  // set select to this client
   const idx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
   if (idx>=0) $('#clientPicker').value = String(idx);
   alert('Client saved.');
@@ -444,9 +551,24 @@ function ensureNumberFor(type){
   if (!($('#invNumber').value||'').trim()) $('#invNumber').value = nextNumber(cfg);
 }
 
-function nextNumber(cfg){
-  const n = parseInt(localStorage.getItem(cfg.counterKey) || '1',10);
-  return cfg.prefix + String(n).padStart(3,'0');
+function nextNumber(cfg) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
+  catch { list = []; }
+
+  let maxNum = 0;
+  list.forEach(d => {
+    if (!d || !d.type) return;
+    const cfgForDoc = numberConfig[d.type];
+    if (cfgForDoc && cfgForDoc.prefix === cfg.prefix) {
+      const suffix = parseInt((d.invNumber || '').replace(cfg.prefix, ''), 10);
+      if (!isNaN(suffix) && suffix > maxNum) maxNum = suffix;
+    }
+  });
+
+  const next = maxNum + 1;
+  localStorage.setItem(cfg.counterKey, String(next)); // keep counterKey in sync
+  return cfg.prefix + String(next).padStart(3, '0');
 }
 
 function incCounter(cfg){
@@ -460,17 +582,54 @@ function incCounter(cfg){
 function addItem(desc='', qty=1, basePrice=0, markup=0){
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td><input class="desc" placeholder="Description" value="${desc}"></td>
-    <td><input class="qty" type="number" step="0.01" value="${qty}"></td>
-    <td><input class="price" type="number" step="0.01" value="${basePrice}"></td>
-    <td><input class="markup markup-col" type="number" step="0.01" value="${markup}"></td>
-    <td class="right lineTotal">R 0.00</td>
-    <td class="right"><button class="btn outline del" type="button" aria-label="Remove item">✕</button></td>
+    <td data-label="Description">
+      <input class="desc" placeholder="Description" value="${desc}">
+    </td>
+    <td data-label="Qty">
+      <input class="qty" type="number" step="0.01" value="${qty}" min="0" inputmode="decimal" autocomplete="off">
+    </td>
+    <td data-label="Unit price">
+      <input class="price" type="number" step="0.01" value="${basePrice}" min="0" inputmode="decimal" autocomplete="off">
+    </td>
+    <td data-label="Markup %">
+      <input class="markup markup-col" type="number" step="0.01" value="${markup}" min="0" inputmode="decimal" autocomplete="off">
+    </td>
+    <td data-label="Line total" class="right lineTotal">R 0.00</td>
+    <td data-label="Actions" class="right">
+      <button class="btn outline del" type="button" aria-label="Remove item">✕</button>
+    </td>
   `;
   itemsBody().appendChild(tr);
+
+  // Set ARIA labels from data-labels for accessibility
+  setA11yLabelsForRow(tr);
+
+  // Clamp negatives to zero on input
+  tr.querySelectorAll('input[type="number"]').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      if (e.target.min === "0" && parseFloat(e.target.value) < 0) e.target.value = 0;
+      updateTotals();
+    });
+  });
+
   tr.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
   tr.querySelector('.del').addEventListener('click', () => { tr.remove(); updateTotals(); });
   updateTotals();
+}
+
+function setA11yLabelsForRow(tr){
+  const idx = [...itemsBody().querySelectorAll('tr')].indexOf(tr) + 1;
+  tr.querySelectorAll('td').forEach(td=>{
+    const label = td.getAttribute('data-label');
+    const input = td.querySelector('input,textarea,select');
+    if (label && input){
+      input.setAttribute('aria-label', `${label} for item ${idx}`);
+    }
+  });
+}
+
+function refreshA11yLabels(){
+  [...itemsBody().querySelectorAll('tr')].forEach(setA11yLabelsForRow);
 }
 
 function gatherItems(){
@@ -502,6 +661,7 @@ function updateTotals(){
   $('#subtotal').textContent = fmt(subtotal, currency);
   $('#vat').textContent = fmt(vat, currency);
   $('#grand').textContent = fmt(grand, currency);
+  refreshA11yLabels();
 }
 
 function getTotals(){
@@ -561,7 +721,6 @@ function writeForm(d){
   $('#payLink').value = d.payLink || '';
   $('#notes').value = d.notes || '';
   itemsBody().innerHTML = '';
-  // Migrate older docs (no markup/basePrice): treat saved p as base and markup 0
   (d.items||[]).forEach(i=>{
     const base = (typeof i.basePrice === 'number') ? i.basePrice : (typeof i.p === 'number' ? i.p : 0);
     const mk = (typeof i.markup === 'number') ? i.markup : 0;
@@ -589,7 +748,6 @@ function resetFormForNext(type){
   $('#invDate').value = luxon.DateTime.now().toISODate();
   $('#dueDate').value = luxon.DateTime.now().plus({days:7}).toISODate();
 
-  // Clear client-facing fields
   if ($('#clientCompany')) $('#clientCompany').value = '';
   if ($('#clientRep')) $('#clientRep').value = '';
   if ($('#clientVAT')) $('#clientVAT').value = '';
@@ -597,17 +755,14 @@ function resetFormForNext(type){
   if ($('#clientAddress')) $('#clientAddress').value = '';
   if ($('#customerPO')) $('#customerPO').value = '';
 
-  // Financials and notes
   $('#discountRate').value = 0;
   $('#notes').value = '';
   $('#payLink').value = '';
 
-  // Items: two fresh rows
   itemsBody().innerHTML = '';
   addItem(); addItem();
   updateTotals();
 
-  // focus PO for quick entry
   setTimeout(()=>$('#customerPO')?.focus(), 0);
 }
 
@@ -621,371 +776,101 @@ function onSaveClick(){
     $('#invNumber').value = inv.invNumber;
   }
 
-  saveDoc(inv);
+ // Confirm overwrite if existing doc matches
+const existingIdx = list.findIndex(
+  x => x.invNumber === inv.invNumber && x.type === inv.type
+);
 
-  // If saved number equals current counter display, advance counter
-  if (inv.invNumber === nextNumber(cfg)) {
-    incCounter(cfg);
-  }
-
-  alert('Saved.');
-
-  // Reset the form to a brand-new document with the next number and two empty items
-  resetFormForNext(inv.type);
-}
-
-async function onEmailClick(){
-  await downloadPDF();
-  const inv = readForm();
-  const cfg = numberConfig[inv.type];
-  if (!inv.invNumber){
-    inv.invNumber = nextNumber(cfg);
-    $('#invNumber').value = inv.invNumber;
-  }
-  saveDoc(inv);
-  if (inv.invNumber === nextNumber(cfg)) incCounter(cfg);
-  // Keep current content for emailing; do not reset automatically on email.
-  openEmailDraft(inv);
-}
-
-function openEmailDraft(inv){
-  const label = clientLabel(inv);
-  const greet = inv.rep ? inv.rep : label;
-  const subject = encodeURIComponent(`${labelForType(inv.type)} ${inv.invNumber} - ${inv.bizName||''}`);
-  const body = encodeURIComponent([
-    `Hi ${greet},`,
-    '',
-    `Please find attached ${labelForType(inv.type).toLowerCase()} ${inv.invNumber}.`,
-    inv.customerPO ? `Customer PO: ${inv.customerPO}` : '',
-    `Total: ${money(inv.totals.grand, inv.currency)} (VAT ${inv.vatRate}% included)`,
-    inv.payLink ? `Pay online: ${inv.payLink}` : '',
-    '',
-    inv.notes || 'Thank you for your business.',
-    '',
-    `${inv.bizName||''}`,
-  ].filter(Boolean).join('\n'));
-  location.href = `mailto:${inv.email||inv.clientEmail||''}?subject=${subject}&body=${body}`;
-}
-
-function labelForType(t){
-  return t==='QUOTE'?'Quote':(t==='PRO_FORMA'?'Pro forma invoice':'Tax invoice');
-}
-
-/* =====================================================
-   CONVERT TO INVOICE
-===================================================== */
-async function onConvertToInvoice(){
-  const current = readForm();
-  if (!(current.company || current.clientCompany || current.clientName || current.name)){ alert('Enter client details first'); return; }
-  if (current.type==='QUOTE') current.status='accepted';
-  saveDoc(current);
-
-  const cfg = numberConfig.TAX_INVOICE;
-  const newDoc = { ...current, type:'TAX_INVOICE' };
-  newDoc.invNumber = nextNumber(cfg);
-  newDoc.invDate = luxon.DateTime.now().toISODate();
-  newDoc.dueDate = luxon.DateTime.now().plus({days:7}).toISODate();
-  newDoc.notes = (current.notes? current.notes+'\n' : '') + `Converted from ${labelForType(current.type)} ${current.invNumber}.`;
-  writeForm(newDoc);
-  updateTotals();
-
-  await downloadPDF();
-  saveDoc(readForm());
-  incCounter(cfg);
-  alert('Converted to tax invoice.');
-}
-
-/* =====================================================
-   RECORDS VIEW
-===================================================== */
-function refreshRecords(){
-  const qBody = $('#tblQuotes tbody');
-  const pBody = $('#tblProforma tbody');
-  const tBody = $('#tblTax tbody');
-  [qBody,pBody,tBody].forEach(tb=>tb.innerHTML='');
-  const q = ($('#searchBox').value||'').toLowerCase();
-
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey)||'[]'); }
-  catch { list = []; }
-  list.sort((a,b)=>b.savedAt-a.savedAt);
-
-  list.forEach(d=>{
-    const row = document.createElement('tr');
-    const total = d.totals?.grand || 0;
-    const label = clientLabel(d);
-    const match = [d.invNumber,label,total].join(' ').toLowerCase().includes(q);
-    if (!match) return;
-    row.innerHTML = `
-      <td>${d.invNumber||''}</td>
-      <td>${d.invDate||''}</td>
-      <td>${label}</td>
-      <td class="right">${fmt(total, d.currency||'ZAR')}</td>
-      <td>${d.status||'open'}</td>
-      <td class="table-actions">
-        <button data-num="${d.invNumber}" data-type="${d.type}" class="openBtn" type="button">Open</button>
-      </td>`;
-    if (d.type==='QUOTE') qBody.appendChild(row);
-    else if (d.type==='PRO_FORMA') pBody.appendChild(row);
-    else tBody.appendChild(row);
-  });
-  document.querySelectorAll('.openBtn').forEach(b=>b.addEventListener('click', e=>{
-    const num = e.target.getAttribute('data-num');
-    const type = e.target.getAttribute('data-type');
-    const list2 = JSON.parse(localStorage.getItem(storage.docsKey)||'[]');
-    const doc = list2.find(x=>x.invNumber===num && x.type===type);
-    if (doc){ showView('create'); writeForm(doc); updateTotals(); }
-  }));
-}
-
-/* =====================================================
-   PDF GENERATION (logo-safe)
-===================================================== */
-function wrapText(doc, text, x, y, maxW){
-  const lines = doc.splitTextToSize(text || '', maxW);
-  doc.text(lines, x, y);
-}
-
-async function getHeaderLogo() {
-  const headerImg = document.querySelector('#logo');
-  if (headerImg && headerImg.src && headerImg.complete && headerImg.naturalWidth) return headerImg;
-  const img = new Image();
-  img.src = 'logo.png';
-  await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-  return img;
-}
-
-function detectImgType(src) {
-  const ext = (src.split('?')[0].split('.').pop() || '').toLowerCase();
-  if (ext === 'jpg' || ext === 'jpeg') return 'JPEG';
-  if (ext === 'webp') return 'WEBP';
-  return 'PNG';
-}
-
-function imgToDataURL(imgEl) {
-  const canvas = document.createElement('canvas');
-  const w = imgEl.naturalWidth || imgEl.width || 300;
-  const h = imgEl.naturalHeight || imgEl.height || 300;
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(imgEl, 0, 0);
-  try { return canvas.toDataURL('image/png'); } catch { return null; }
-}
-
-async function downloadPDF(){
-  const inv = readForm();
-  const { jsPDF } = window.jspdf || {};
-  if (!jsPDF) { alert('PDF engine not found'); return; }
-
-  const doc = new jsPDF({unit:'pt', format:'a4'});
-  const M = 44;
-  const W = doc.internal.pageSize.getWidth();
-  const BRAND = [15,123,108], INK = [31,41,55], MUTED = [107,114,128];
-
-  const bandH = 90;
-
-  // Top header band with doc type + number only
-  doc.setFillColor(...BRAND);
-  doc.rect(0, 0, W, bandH, 'F');
-
-  const title = labelForType(inv.type);
-  doc.setTextColor(255,255,255);
-  doc.setFont('helvetica', 'bold').setFontSize(18);
-  doc.text(title.toUpperCase(), M, 56);
-
-  if (inv.invNumber) {
-    const invNumW = doc.getTextWidth(inv.invNumber);
-    doc.text(inv.invNumber, W - M - invNumW, 56);
-  }
-
-  // Move down: logo + company name
-  doc.setTextColor(...INK);
-  let logoW = 0, logoH = 0;
-  const logoY = bandH + 24; // push logo below the band
-  try {
-    const logoEl = await getHeaderLogo();
-    if (logoEl) {
-      const maxW = 56, maxH = 56;
-      const scale = Math.min(maxW / (logoEl.naturalWidth||maxW), maxH / (logoEl.naturalHeight||maxH));
-      logoW = Math.max(1, (logoEl.naturalWidth||maxW) * scale);
-      logoH = Math.max(1, (logoEl.naturalHeight||maxH) * scale);
-      const type = detectImgType(logoEl.src);
-      let added = false;
-      try { doc.addImage(logoEl, type, M, logoY, logoW, logoH); added = true; }
-      catch {
-        const dataURL = imgToDataURL(logoEl);
-        if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoW, logoH); added = true; }
-      }
-      if (!added) console.warn('Logo could not be embedded into PDF.');
-    }
-  } catch (err) { console.warn('Logo could not be loaded for PDF', err); }
-
-  // Company name aligned to logo
-  const nameY = logoY + Math.max(20, (logoH||40)/2);
-  doc.setFont('helvetica','bold').setFontSize(14);
-  if (inv.bizName) doc.text(inv.bizName, M + (logoW||0) + 12, nameY);
-
-  // Compute content top after the logo block
-  const contentTop = Math.max(bandH + 24, logoY + (logoH||0));
-
-  // Tagline
-  doc.setFont('helvetica','normal').setFontSize(10);
-  doc.setTextColor(...MUTED);
-  const taglineY = contentTop + 14;
-  doc.text('Repairs • Parts • Diagnostics • Field Service', M, taglineY);
-  doc.setTextColor(...INK);
-
-  // Business info block (address, VAT, tel)
-  const bizLines = [];
-  if (inv.bizAddress) bizLines.push(inv.bizAddress);
-  if (inv.bizVAT) bizLines.push(`VAT: ${inv.bizVAT}`);
-  if (inv.bizDetails) bizLines.push(inv.bizDetails); // includes Tel
-
-  const infoY = taglineY + 16;
-  let bizBottomY = infoY;
-  if (bizLines.length) {
-    const linesArr = doc.splitTextToSize(bizLines.join('\n'), 240);
-    doc.text(linesArr, M, infoY);
-    const lineHeight = 12; // approx for 10pt
-    bizBottomY = infoY + Math.max(0, (linesArr.length-1) * lineHeight);
-  }
-
-  // Dates + PO on left
-  const datesY = Math.max(bizBottomY + 12, infoY + 24);
-  if (inv.invDate) doc.text(`Date: ${inv.invDate}`, M, datesY);
-  if (inv.dueDate) doc.text(`Due: ${inv.dueDate}`, M+160, datesY);
-  if (inv.customerPO) doc.text(`Customer PO: ${inv.customerPO}`, M, datesY + 16);
-  const leftBottomY = datesY + 20;
-
-  // Bill To on right, aligned to contentTop
-  doc.setFont('helvetica','bold');
-  const rightTop = contentTop + 14;
-  doc.text('Bill To', W/2, rightTop);
-
-  const company = inv.company || inv.clientCompany || inv.clientName || inv.name || '';
-  const rep     = inv.rep || inv.clientRep || '';
-  const vatNo   = inv.vat || inv.clientVAT || '';
-  const email   = inv.email || inv.clientEmail || '';
-  const addr    = inv.address || inv.clientAddress || '';
-
-  let yPos = rightTop + 16;
-  if (company) { doc.text(company, W/2, yPos); yPos += 16; }
-  doc.setFont('helvetica','normal');
-
-  const billLines = [];
-  if (rep)   billLines.push(`Attn: ${rep}`);
-  if (vatNo) billLines.push(`VAT: ${vatNo}`);
-  if (email) billLines.push(email);
-  if (addr)  billLines.push(addr);
-
-  let billBottomY = yPos;
-  if (billLines.length) {
-    const billArr = doc.splitTextToSize(billLines.join('\n'), 240);
-    doc.text(billArr, W/2, yPos);
-    const lineHeight = 12;
-    billBottomY = yPos + Math.max(0, (billArr.length - 1) * lineHeight);
-  }
-
-  // Items table starts after the lower of left or right columns
-  const itemsStartY = Math.max(leftBottomY, billBottomY) + 24;
-
-  // Items (client-facing: only adjusted unit price i.p, never markup/base)
-  const body = (inv.items || []).map(i => [
-    i.d,
-    i.q,
-    money(i.p, inv.currency),
-    money(i.total, inv.currency)
-  ]);
-
-  doc.autoTable({
-    startY: Math.max(itemsStartY, 230),
-    head: [['Description','Qty','Unit','Total']],
-    body,
-    theme: 'striped',
-    styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
-    headStyles: { fillColor: [239,250,247], textColor: INK },
-    columnStyles: {
-      0: { cellWidth: 240 },
-      1: { cellWidth: 60, halign: 'right' },
-      2: { cellWidth: 100, halign: 'right' },
-      3: { cellWidth: 100, halign: 'right' }
-    },
-    margin: { left: M, right: M }
-  });
-
-  let y = (doc.lastAutoTable && doc.lastAutoTable.finalY)
-    ? doc.lastAutoTable.finalY + 10
-    : Math.max(itemsStartY, 240);
-
-  // Totals
-  const t = inv.totals || { subtotal:0, discount:0, vat:0, grand:0 };
-  const linesTotals = [
-    ['Subtotal', money(t.subtotal, inv.currency)],
-    ['Discount', money(t.discount, inv.currency)],
-    ['VAT',      money(t.vat,      inv.currency)],
-    ['Total',    money(t.grand,    inv.currency)]
-  ];
-  const rightX = W - M - 200;
-
-  doc.setFont('helvetica','bold');
-  doc.text('Totals', rightX, y + 6);
-  y += 10;
-  doc.setFont('helvetica','normal');
-
-  linesTotals.forEach(row => {
-    y += 18;
-    doc.text(row[0], rightX, y);
-    doc.text(row[1], rightX + 120, y, { align: 'right' });
-  });
-
-  // Payment + Notes
-  y += 30;
-  if (inv.payLink){
-    doc.setTextColor(...BRAND).textWithLink('Pay now', M, y, { url: inv.payLink });
-    doc.setTextColor(...INK);
-  }
-  wrapText(
-    doc,
-    inv.notes || (inv.type === 'QUOTE' ? 'This quote is valid for 14 days.' : 'Thank you for your business.'),
-    M,
-    y + 20,
-    420
+if (existingIdx >= 0) {
+  const ok = confirm(
+    `${labelForType(inv.type)} ${inv.invNumber} exists. Overwrite?`
   );
-
-  // Banking details (static)
-  (function renderBankingDetails(){
-    const pageH = doc.internal.pageSize.getHeight();
-    const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) ? doc.lastAutoTable.finalY : 0;
-
-    let bankY = Math.max(y + 60, lastTableY + 40, 120);
-    if (bankY > pageH - 140) {
-      doc.addPage();
-      bankY = 120;
-    }
-
-    // Subtle separator
-    doc.setDrawColor(229,231,235).setLineWidth(0.7);
-    doc.line(M, bankY - 10, W - M, bankY - 10);
-
-    doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
-    doc.text('Banking details', M, bankY);
-
-    doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
-    doc.text([
-      'Name: IC Schutte',
-      'Bank: Capitec saving',
-      'Account number: 1680306187',
-      'Branch code: 470010'
-    ], M, bankY + 14);
-  })();
-
-  // Footer
-  doc.setFontSize(9).setTextColor(107,114,128);
-  if (inv.bizEmail) doc.text(inv.bizEmail, M, 820);
-
-  const filename = (inv.invNumber || title.replace(/\s+/g,'_')) + '.pdf';
-  doc.save(filename);
+  if (!ok) return;
 }
-</script>
-</body>
-</html>
+
+// Save the doc
+saveDoc(inv);
+
+// === Keep counters in sync ===
+try {
+  if (!cfg.counters) cfg.counters = {};
+  if (!cfg.counters[inv.type]) cfg.counters[inv.type] = 0;
+  cfg.counters[inv.type]++;
+
+  // Persist updated config
+  localStorage.setItem(storage.cfgKey, JSON.stringify(cfg));
+
+  // Optionally update any “next number” display
+  const nextNum = nextNumber(cfg);
+  const elNext = document.querySelector('#nextNumber');
+  if (elNext) elNext.textContent = nextNum;
+
+} catch (err) {
+  console.error('Error updating counters:', err);
+}
+
+// === Build PDF ===
+const M = 40;
+const W = 595.28;
+const INK = [17, 24, 39];
+const MUTED = [107, 114, 128];
+let y = 60;
+
+const doc = new jsPDF();
+
+// Heading
+doc.setFontSize(12).setFont('helvetica', 'bold');
+doc.text('Invoice', M, y);
+y += 20;
+
+// Table(s)
+doc.autoTable({
+  head: [['Item', 'Qty', 'Price']],
+  body: [
+    ['Product A', '2', '$50'],
+    ['Product B', '1', '$30']
+  ],
+  startY: y,
+  styles: { fontSize: 10 }
+});
+
+const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) || y;
+y = lastTableY;
+
+// Banking details (static)
+(function renderBankingDetails(){
+  const pageH = doc.internal.pageSize.getHeight();
+  let bankY = Math.max(y + 60, lastTableY + 40, 120);
+  if (bankY > pageH - 140) {
+    doc.addPage();
+    bankY = 120;
+  }
+
+  // Separator
+  doc.setDrawColor(229, 231, 235).setLineWidth(0.7);
+  doc.line(M, bankY - 10, W - M, bankY - 10);
+
+  // Heading
+  doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
+  doc.text('Banking details', M, bankY);
+
+  // Static info
+  doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
+  doc.text([
+    'Name: IC Schutte',
+    'Bank: Capitec saving',
+    'Account number: 1680306187',
+    'Branch code: 470010'
+  ], M, bankY + 14);
+})();
+
+// Footer
+doc.setFontSize(9).setTextColor(107, 114, 128);
+if (inv.bizEmail) {
+  doc.text(inv.bizEmail, M, doc.internal.pageSize.getHeight() - 20);
+}
+
+// Save PDF
+const title = 'Invoice';
+const filename = (inv.invNumber || title.replace(/\s+/g, '_')) + '.pdf';
+doc.save(filename);
