@@ -1,4 +1,3 @@
-// this is the begining
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,1086 +7,383 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css" />
 <style>
-  :root{
-    --brand:#0f7b6c; --accent:#eefaf7; --ink:#1f2937; --muted:#6b7280; --bg:#f9fafb; --line:#e5e7eb;
+  :root{--brand:#0f7b6c;--accent:#eefaf7;--ink:#1f2937;--muted:#6b7280;--bg:#f9fafb;--line:#e5e7eb;}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:980px;margin:auto;line-height:1.5;}
+  nav{display:flex;gap:10px;position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:999;box-shadow:0 -4px 20px rgba(0,0,0,.1);padding:12px;justify-content:center;}
+  nav button{padding:16px 24px;border:1px solid var(--brand);border-radius:12px;background:#fff;color:var(--brand);font-weight:700;font-size:1.1rem;cursor:pointer;flex:1;max-width:220px;transition:.2s;}
+  nav button.active{background:var(--brand);color:#fff;}
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding-bottom:90px;}
+  .sheet>header{display:flex;gap:20px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:20px;}
+  #logo{width:180px;height:auto;object-fit:contain;}
+  .brand-block h1{margin:0;font-size:26px;color:var(--brand);font-weight:800;}
+  .brand-sub{font-size:14px;color:var(--muted);}
+  .company-details{margin-top:8px;font-size:13px;color:var(--muted);}
+  @media (max-width:640px){.sheet>header{flex-direction:column;text-align:center;}#logo{margin:0 auto;width:160px;}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0;}
+  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;}
+  .col-3{grid-column:span 3;}.col-4{grid-column:span 4;}.col-6{grid-column:span 6;}.col-12{grid-column:span 12;}
+  @media (max-width:720px){.col-3,.col-4,.col-6{grid-column:span 12;}}
+  label{font-size:.9rem;color:var(--muted);font-weight:600;margin-bottom:6px;display:block;}
+  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:#fff;}
+  textarea{min-height:100px;resize:vertical;}
+  table{width:100%;border-collapse:collapse;margin-top:10px;}
+  th,td{padding:12px;border-bottom:1px solid #eee;font-size:.95rem;}
+  th{text-align:left;color:var(--muted);font-weight:700;background:#f8f9fa;}
+  tfoot td{border-top:3px double var(--line);font-weight:700;background:#f8f9fa;}
+  .btn{background:var(--brand);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-weight:700;cursor:pointer;font-size:1.05rem;transition:.2s;}
+  .btn.outline{background:transparent;color:var(--brand);border:2px solid var(--brand);}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,123,108,.3);}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
+  .right{text-align:right;}
+  .pill{background:var(--accent);color:var(--brand);padding:4px 10px;border-radius:999px;font-size:.8rem;margin-left:8px;font-weight:600;}
+  .hidden{display:none;}
+  .markup-col{max-width:100px;}
+  @media (max-width:480px){
+    #itemsTbl thead{display:none;}
+    #itemsTbl tr,#itemsTbl td{display:block;width:100%;border-bottom:1px solid var(--line);margin-bottom:12px;padding:10px 0;}
+    #itemsTbl td::before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px;}
+    #itemsTbl td[data-label="Actions"]{display:none;}
+    .actions button{flex:1;font-size:1.1rem;padding:16px;}
   }
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:980px;margin:auto;}
-  nav{display:flex;gap:8px;margin-bottom:12px}
-  nav button{padding:10px 14px;border:1px solid var(--brand);border-radius:10px;background:#fff;color:var(--brand);font-weight:700;cursor:pointer}
-  nav button.active{background:var(--brand);color:#fff}
-  .sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.04);}
-  .sheet > header{display:flex;gap:16px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px;}
-  #logo{width:180px;height:auto;display:block;object-fit:contain}
-  .brand-block h1{margin:0 0 6px 0;font-size:22px;letter-spacing:.2px;color:var(--brand)}
-  .brand-sub{margin:0;font-size:13px;color:var(--muted);line-height:1.4}
-  .company-details{margin:6px 0 0 0;font-size:13px;color:var(--muted);line-height:1.4}
-  @media (max-width:640px){.sheet > header{flex-direction:column;text-align:center}#logo{margin:0 auto;width:160px}}
-
-  .card{background:white;border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
-  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
-  .col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-2{grid-column:span 2}.col-12{grid-column:span 12}
-  @media (max-width:720px){.col-6,.col-4,.col-3,.col-2{grid-column:span 12}}
-  label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:4px}
-  input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:.95rem;background:#fff}
-  textarea{min-height:70px;resize:vertical}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:10px;border-bottom:1px solid #eee;font-size:.95rem}
-  th{text-align:left;color:var(--muted);font-weight:600}
-  tfoot td{border-top:2px solid #eee;font-weight:600}
-  .btn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}
-  .btn.outline{background:#fff;color:var(--brand);border:2px solid var(--brand)}
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .right{text-align:right}
-  .muted{color:var(--muted)}
-  .pill{display:inline-block;background:var(--accent);color:var(--brand);padding:2px 8px;border-radius:999px;font-size:.8rem;margin-left:6px}
-  .hidden{display:none}
-  .table-actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
-  .search {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.markup-col {
-  max-width: 90px;
-}
-
-/* Mobile‑friendly layout */
-@media (max-width: 480px) {
-  /* Hide table headers */
-  #itemsTbl thead { display: none; }
-
-  /* Stack table cells vertically */
-  #itemsTbl, #itemsTbl tbody, #itemsTbl tr, #itemsTbl td {
-    display: block;
-    width: 100%;
-  }
-  #itemsTbl tr {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--line);
-  }
-  #itemsTbl td {
-    position: relative;
-    padding: 8px 12px;
-    text-align: left;
-    margin-bottom: 10px; /* extra breathing room */
-  }
-  #itemsTbl td::before {
-    content: attr(data-label);
-    display: block;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  #itemsTbl td[data-label="Actions"] { display: none; }
-
-  /* Full‑width action buttons */
-  .actions button {
-    flex: 1 1 100% !important;
-    margin: 6px 0 !important;
-  }
-
-  /* Stick nav to bottom on mobile */
-  nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    z-index: 9;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.06); /* subtle float effect */
-  }
-  .sheet {
-    padding-bottom: 60px; /* room for nav */
-  }
-
-  /* Keep number fields compact for faster entry */
-  #itemsTbl input.qty,
-  #itemsTbl input.price,
-  #itemsTbl input.markup {
-    max-width: 140px;
-  }
-
-  /* Match tap‑target comfort for buttons */
-  .btn, .btn.outline {
-    padding: 14px 18px;
-  }
-
-  /* Ensure remove ✕ button is easy to hit on touch devices */
-  #itemsTbl td[data-label="Actions"] .btn {
-    padding: 10px 14px;
-    font-size: 1.1rem;
-  }
-
-  /* Accessibility: label inputs for screen readers */
-  #itemsTbl td[data-label] input {
-    aria-label: attr(data-label);
-  }
-}
-
 </style>
-
-
 </head>
 <body>
-
 <nav>
-  <button id="tabCreate" class="active" aria-label="Create new document">Create</button>
-  <button id="tabRecords" aria-label="View saved records">Records</button>
+  <button id="tabCreate" class="active">Create</button>
+  <button id="tabRecords">Records</button>
 </nav>
 
 <section id="createView" class="sheet">
   <header>
-    <img id="logo" src="logo.png" alt="Nico's Auto & Agri logo" decoding="async" onerror="this.style.display='none'">
+    <img id="logo" src="logo.png" alt="Nico's Auto & Agri" onerror="this.style.display='none'">
     <div class="brand-block">
       <h1>Nico’s Auto & Agri — Invoice</h1>
       <p class="brand-sub">Repairs • Parts • Diagnostics • Field Service</p>
-      <p class="company-details">
-        98 Diemeer Str, Welgelegen, Polokwane, 0699<br>
-        Tel: 079 568 1706 / 067 277 0183
-      </p>
+      <p class="company-details">98 Diemeer Str, Welgelegen, Polokwane, 0699<br>Tel: 079 568 1706 / 067 277 0183</p>
     </div>
   </header>
 
   <div class="card">
     <div class="row">
-      <div class="col-3">
-        <label for="docType">Document type</label>
-        <select id="docType" aria-label="Document type">
-          <option value="QUOTE">Quote</option>
-          <option value="PRO_FORMA">Pro forma invoice</option>
-          <option value="TAX_INVOICE" selected>Tax invoice</option>
-        </select>
-      </div>
-      <div class="col-3">
-        <label for="customerPO">Customer order number</label>
-        <input id="customerPO" placeholder="Customer PO / Order #" />
-      </div>
-      <div class="col-3">
-        <label for="invNumber">Document no.</label>
-        <input id="invNumber" aria-label="Document number" />
-      </div>
-      <div class="col-3">
-        <label for="currency">Currency</label>
-        <select id="currency" aria-label="Currency">
-          <option value="ZAR" selected>ZAR (R)</option>
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-        </select>
-      </div>
-
-      <div class="col-4">
-        <label for="invDate">Invoice date</label>
-        <input id="invDate" type="date" />
-      </div>
-      <div class="col-4">
-        <label for="dueDate">Due date</label>
-        <input id="dueDate" type="date" />
-      </div>
-      <div class="col-4">
-        <label for="vatRate">VAT % <span class="pill">SA default 15%</span></label>
-        <input id="vatRate" type="number" step="0.01" value="15" />
-      </div>
+      <div class="col-3"><label>Document type</label><select id="docType"><option value="QUOTE">Quote</option><option value="PRO_FORMA">Pro forma invoice</option><option value="TAX_INVOICE" selected>Tax invoice</option></select></div>
+      <div class="col-3"><label>Customer PO</label><input id="customerPO" placeholder="Order #"></div>
+      <div class="col-3"><label>Document no.</label><input id="invNumber" readonly></div>
+      <div class="col-3"><label>Currency</label><select id="currency"><option value="ZAR" selected>ZAR (R)</option><option value="USD">USD ($)</option><option value="EUR">EUR (€)</option></select></div>
+      <div class="col-4"><label>Date</label><input id="invDate" type="date"></div>
+      <div class="col-4"><label>Due date</label><input id="dueDate" type="date"></div>
+      <div class="col-4"><label>VAT % <span class="pill">SA 15%</span></label><input id="vatRate" type="number" step="0.01" value="15"></div>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label for="bizName">Your business</label>
-        <input id="bizName" value="Nico's Auto & Agri" readonly />
-        <input id="bizDetails" value="Tel: 079 568 1706 / 067 277 0183" placeholder="Tel: 079 568 1706 / 067 277 0183" />
-        <input id="bizEmail" value="nicosauto@outlook.com" placeholder="nicosauto@outlook.com" />
-        <label for="bizAddress">Company address</label>
-        <input id="bizAddress" value="98 Diemeer Str, Welgelegen, Polokwane, 0699" placeholder="98 Diemeer Str, Welgelegen, Polokwane, 0699" />
-        <label for="bizVAT">VAT number</label>
-        <input id="bizVAT" placeholder="4xxxxxxxxx" />
+        <label>Your business</label>
+        <input value="Nico's Auto & Agri" readonly>
+        <input value="Tel: 079 568 1706 / 067 277 0183" readonly>
+        <input value="nicosauto@outlook.com" readonly>
+        <input value="98 Diemeer Str, Welgelegen, Polokwane, 0699" readonly>
+        <label>VAT number</label><input id="bizVAT" placeholder="Your VAT">
       </div>
       <div class="col-6">
-        <div class="row">
-          <div class="col-12">
-            <label for="clientCompany">Client Company Name</label>
-            <input id="clientCompany" placeholder="Full company name" />
-          </div>
-          <div class="col-12">
-            <label for="clientRep">Company Representative</label>
-            <input id="clientRep" placeholder="Person handling this order" />
-          </div>
-          <div class="col-12">
-            <label for="clientVAT">VAT Number</label>
-            <input id="clientVAT" placeholder="ZA VAT or international VAT" />
-          </div>
-          <div class="col-12">
-            <label for="clientAddress">Company Address</label>
-            <input id="clientAddress" placeholder="Street, City, Postal code" />
-          </div>
-          <div class="col-6">
-            <label for="clientEmail">Email</label>
-            <input id="clientEmail" placeholder="email@client.com" />
-          </div>
-          <div class="col-6">
-            <label for="clientPicker">Saved clients</label>
-            <select id="clientPicker" aria-label="Saved clients"><option value="">— Select saved —</option></select>
-          </div>
-        </div>
-        <div class="actions" style="margin-top:6px">
-          <button class="btn outline" id="saveClientBtn" type="button">Save client</button>
-          <button class="btn outline" id="deleteClientBtn" type="button">Delete client</button>
-        </div>
+        <label>Client Company</label><input id="clientCompany" placeholder="Company name">
+        <label>Contact Person</label><input id="clientRep" placeholder="Name">
+        <label>Client VAT</label><input id="clientVAT" placeholder="VAT number">
+        <label>Address</label><input id="clientAddress" placeholder="Street, City, Postal code">
+        <label>Email</label><input id="clientEmail" type="email" placeholder="email@client.com">
+        <label>Saved clients</label><select id="clientPicker"><option value="">— Select saved —</option></select>
+        <div class="actions"><button class="btn outline" id="saveClientBtn">Save Client</button><button class="btn outline" id="deleteClientBtn">Delete</button></div>
       </div>
     </div>
   </div>
 
   <div class="card">
     <label>Line items</label>
-    <table id="itemsTbl" aria-label="Line items table">
-      <thead>
-        <tr>
-          <th style="width:42%">Description</th>
-          <th>Qty</th>
-          <th>Unit price</th>
-          <th>Markup %</th>
-          <th class="right">Line total</th>
-          <th aria-label="Actions"></th>
-        </tr>
-      </thead>
+    <table id="itemsTbl">
+      <thead><tr><th>Description</th><th>Qty</th><th>Unit price</th><th>Markup %</th><th class="right">Line total</th><th></th></tr></thead>
       <tbody id="itemsBody"></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="6"><button class="btn outline" id="addItem" type="button" aria-label="Add item">Add item</button></td>
-        </tr>
-      </tfoot>
+      <tfoot><tr><td colspan="6"><button class="btn outline" id="addItem">Add item</button></td></tr></tfoot>
     </table>
   </div>
 
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label for="notes">Notes</label>
+        <label>Notes</label>
         <textarea id="notes" placeholder="Thank you for your business. Payment due within 7 days."></textarea>
-        <label for="payLink">Payment link (optional)</label>
-        <input id="payLink" placeholder="https://pay.yourdomain.co.za/invoice/..." />
+        <label>Payment link (optional)</label>
+        <input id="payLink" placeholder="https://pay.yoco.link/...">
       </div>
       <div class="col-6">
-        <table aria-label="Totals">
+        <table style="font-size:1.2rem;">
           <tr><td>Subtotal</td><td class="right" id="subtotal">R 0.00</td></tr>
-          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" /></td></tr>
+          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" style="width:90px;text-align:right;"></td></tr>
           <tr><td>VAT</td><td class="right" id="vat">R 0.00</td></tr>
-          <tr><td><strong>Total</strong></td><td class="right" id="grand">R 0.00</td></tr>
+          <tr><td><strong>Total</strong></td><td class="right" id="grand"><strong>R 0.00</strong></td></tr>
         </table>
       </div>
     </div>
     <div class="actions">
-      <button class="btn" id="saveBtn" type="button">Save</button>
-      <button class="btn" id="pdfBtn" type="button">Download PDF</button>
-      <button class="btn outline" id="emailBtn" type="button">Email draft</button>
-      <button class="btn outline" id="convertBtn" type="button">Convert to tax invoice</button>
+      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn" id="pdfBtn">Download PDF</button>
+      <button class="btn outline" id="emailBtn">Email Draft</button>
+      <button class="btn outline" id="convertBtn">Convert to Tax Invoice</button>
     </div>
   </div>
 </section>
 
 <section id="recordsView" class="sheet hidden">
   <header>
-    <img id="logo2" src="logo.png" alt="Nico's Auto & Agri logo" decoding="async" onerror="this.style.display='none'">
+    <img id="logo2" src="logo.png" alt="" onerror="this.style.display='none'">
     <div class="brand-block">
       <h1>Records</h1>
       <p class="brand-sub">Quotes • Pro forma • Tax invoices</p>
-      <p class="company-details">
-        98 Diemeer Str, Welgelegen, Polokwane, 0699<br>
-        Tel: 079 568 1706 / 067 277 0183
-      </p>
     </div>
   </header>
-
-  <div class="search">
-    <input id="searchBox" placeholder="Search client, number, amount..." aria-label="Search records" />
-    <button class="btn outline" id="refreshBtn" type="button">Refresh</button>
+  <div class="search" style="margin-bottom:16px;">
+    <input id="searchBox" placeholder="Search client, number, amount..." style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);">
+    <button class="btn outline" id="refreshBtn">Refresh</button>
   </div>
-
-  <div class="card">
-    <h3>Quotes</h3>
-    <table id="tblQuotes" aria-label="Quotes table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Pro forma invoices</h3>
-    <table id="tblProforma" aria-label="Pro forma table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Tax invoices</h3>
-    <table id="tblTax" aria-label="Tax invoices table">
-      <thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <div class="card"><h3>Quotes</h3><table id="tblQuotes"><thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
+  <div class="card"><h3>Pro forma invoices</h3><table id="tblProforma"><thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
+  <div class="card"><h3>Tax invoices</h3><table id="tblTax"><thead><tr><th>Number</th><th>Date</th><th>Client</th><th class="right">Amount</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.3/dist/jspdf.plugin.autotable.min.js"></script>
 <script>
-/* =====================================================
-   HELPERS & CONFIG
-===================================================== */
-const $ = sel => document.querySelector(sel);
-const itemsBody = () => document.querySelector('#itemsBody');
-const debounce = (fn, delay=250) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; };
+const { DateTime } = luxon;
+const { jsPDF } = window.jspdf;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 
-const fmt = (v, c) => {
+const config = { QUOTE: 'QUO', PRO_FORMA: 'PFI', TAX_INVOICE: 'NAA' };
+Object.keys(config).forEach(t => localStorage.getItem(`c_${t}`) || localStorage.setItem(`c_${t}`, '1'));
+
+$('#tabCreate').onclick = () => show('create');
+$('#tabRecords').onclick = () => { show('records'); refreshRecords(); };
+function show(v) {
+  $('#createView').classList.toggle('hidden', v !== 'create');
+  $('#recordsView').classList.toggle('hidden', v !== 'records');
+  $('#tabCreate').classList.toggle('active', v === 'create');
+  $('#tabRecords').classList.toggle('active', v !== 'records');
+}
+
+const fmt = (n, c='ZAR') => {
   const sym = c==='USD'?'$':c==='EUR'?'€':'R';
-  return `${sym} ${Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
-};
-const money = (v, c) => {
-  const sym = c==='USD'?'$':c==='EUR'?'€':'R';
-  return `${sym} ${Number(v||0).toFixed(2)}`;
+  return `${sym} ${Number(n||0).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 };
 
-const numberConfig = {
-  QUOTE:      { prefix: 'QUO', counterKey: 'counter_QUOTE' },
-  PRO_FORMA:  { prefix: 'PFI', counterKey: 'counter_PRO_FORMA' },
-  TAX_INVOICE:{ prefix: 'NAA', counterKey: 'counter_TAX_INVOICE' }
-};
+function autoSetup() {
+  $('#invDate').value = DateTime.now().toISODate();
+  $('#dueDate').value = DateTime.now().plus({days:7}).toISODate();
+  ensureNumber();
+  applyNote();
+}
+$('#docType').onchange = () => { ensureNumber(); applyNote(); };
+function ensureNumber() {
+  const type = $('#docType').value;
+  const prefix = config[type];
+  if (!$('#invNumber').value) {
+    const n = +localStorage.getItem(`c_${type}`) || 1;
+    $('#invNumber').value = prefix + String(n).padStart(4,'0');
+  }
+}
+function nextNumber(type) {
+  const n = +localStorage.getItem(`c_${type}`) || 1;
+  return config[type] + String(n).padStart(4,'0');
+}
+function inc(type) { localStorage.setItem(`c_${type}`, String(+localStorage.getItem(`c_${type}`)+1)); }
 
-const storage = {
-  docsKey: 'docs',
-  clientsKey: 'clients'
-};
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-$('#tabCreate').addEventListener('click', ()=>showView('create'));
-$('#tabRecords').addEventListener('click', ()=>showView('records'));
-function showView(which){
-  if (which==='create'){
-    $('#createView').classList.remove('hidden');
-    $('#recordsView').classList.add('hidden');
-    $('#tabCreate').classList.add('active');
-    $('#tabRecords').classList.remove('active');
-    // focus first editable field for UX
-    setTimeout(()=>{ const el = $('#customerPO') || $('#clientCompany'); el && el.focus(); }, 0);
-  } else {
-    refreshRecords();
-    $('#createView').classList.add('hidden');
-    $('#recordsView').classList.remove('hidden');
-    $('#tabCreate').classList.remove('active');
-    $('#tabRecords').classList.add('active');
+function applyNote() {
+  if (['QUOTE','PRO_FORMA'].includes($('#docType').value) && !$('#notes').value.trim()) {
+    $('#notes').value = 'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies';
   }
 }
 
-/* =====================================================
-   READY
-===================================================== */
-function onReady(fn){
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
-  else fn();
-}
-
-/* =====================================================
-   INIT
-===================================================== */
-onReady(() => {
-  // Initialize counters first time
-  Object.values(numberConfig).forEach(cfg=>{
-    if (!localStorage.getItem(cfg.counterKey)) localStorage.setItem(cfg.counterKey,'1');
-  });
-
-  // Event bindings
-  $('#currency').addEventListener('change', updateTotals);
-  ['vatRate','discountRate'].forEach(id => document.querySelector('#' + id).addEventListener('input', updateTotals));
-  $('#addItem').addEventListener('click', addItem);
-  $('#saveBtn').addEventListener('click', onSaveClick);
-  $('#pdfBtn').addEventListener('click', () => downloadPDF());
-  $('#emailBtn').addEventListener('click', onEmailClick);
-  $('#convertBtn').addEventListener('click', onConvertToInvoice);
-  $('#docType').addEventListener('change', onDocTypeChange);
-  $('#clientPicker').addEventListener('change', onClientPick);
-  $('#saveClientBtn').addEventListener('click', onSaveClient);
-  $('#deleteClientBtn').addEventListener('click', onDeleteClient);
-  $('#refreshBtn').addEventListener('click', refreshRecords);
-  $('#searchBox').addEventListener('input', debounce(refreshRecords, 200));
-
-  loadClients();
-  autoSetup();
-  addItem(); addItem();
-  updateTotals();
-});
-
-/* =====================================================
-   CLIENTS (company/rep/VAT + migration)
-===================================================== */
-function clientLabel(c){
-  const company = c.company || c.name || '';
-  return c.rep ? `${company} — ${c.rep}` : company;
-}
-
-function getClientFormValues(){
-  const hasNew = !!$('#clientCompany');
-  const company = hasNew ? $('#clientCompany').value.trim() : ($('#clientName') ? $('#clientName').value.trim() : '');
-  const rep     = hasNew && $('#clientRep') ? $('#clientRep').value.trim() : '';
-  const vat     = hasNew && $('#clientVAT') ? $('#clientVAT').value.trim() : '';
-  const email   = $('#clientEmail') ? $('#clientEmail').value.trim() : '';
-  const address = $('#clientAddress') ? $('#clientAddress').value.trim() : '';
-  return { company, rep, vat, email, address };
-}
-
-function setClientForm(c = {}){
-  const hasNew = !!$('#clientCompany');
-  if (hasNew) {
-    $('#clientCompany').value = c.company || c.name || '';
-    if ($('#clientRep')) $('#clientRep').value = c.rep || '';
-    if ($('#clientVAT')) $('#clientVAT').value = c.vat || '';
-  } else if ($('#clientName')) {
-    $('#clientName').value = c.company || c.name || '';
-  }
-  if ($('#clientEmail'))   $('#clientEmail').value = c.email || '';
-  if ($('#clientAddress')) $('#clientAddress').value = c.address || '';
-}
-
-function loadClients(){
-  let clients;
-  try {
-    clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  } catch { clients = []; }
-  let changed = false;
-  clients = clients.map(c => {
-    if (c && !('company' in c) && ('name' in c)) {
-      changed = true;
-      return { company: c.name || '', rep: '', vat: '', email: c.email || '', address: c.address || '' };
-    }
-    return c;
-  });
-  if (changed) localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  const sel = $('#clientPicker');
-  sel.innerHTML = '<option value="">— Select saved —</option>' + clients.map((c,i)=>`<option value="${i}">${clientLabel(c)}</option>`).join('');
-}
-
-function onClientPick(){
-  const idxRaw = $('#clientPicker').value;
-  const idx = Number.isInteger(+idxRaw) ? parseInt(idxRaw,10) : NaN;
-  if (isNaN(idx)) return;
-  const clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const c = clients[idx]; if (!c) return;
-  setClientForm(c);
-}
-
-function onSaveClient(){
-  const c = getClientFormValues();
-  if (!(c.company||'').trim()){
-    alert('Enter a client company name before saving.');
-    return;
-  }
-  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const existingIdx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
-  if (existingIdx >= 0) clients[existingIdx] = c; else clients.push(c);
-  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  loadClients();
-  // set select to this client
-  const idx = clients.findIndex(x => (x.company||'').toLowerCase() === c.company.toLowerCase());
-  if (idx>=0) $('#clientPicker').value = String(idx);
-  alert('Client saved.');
-}
-
-function onDeleteClient(){
-  const selVal = $('#clientPicker').value;
-  if (!selVal){ alert('Select a saved client to delete.'); return; }
-  const idx = parseInt(selVal,10);
-  let clients = JSON.parse(localStorage.getItem(storage.clientsKey)||'[]');
-  const c = clients[idx];
-  if (!c){ alert('Client not found.'); return; }
-  if (!confirm(`Delete saved client "${clientLabel(c)}"?`)) return;
-  clients.splice(idx,1);
-  localStorage.setItem(storage.clientsKey, JSON.stringify(clients));
-  loadClients();
-  alert('Client deleted.');
-}
-
-/* =====================================================
-   NUMBERS & DATES
-===================================================== */
-function autoSetup(){
-  const now = luxon.DateTime.now().toISODate();
-  $('#invDate').value = now;
-  $('#dueDate').value = luxon.DateTime.now().plus({days:7}).toISODate();
-  $('#currency').value = 'ZAR';
-  ensureNumberFor($('#docType').value);
-}
-
-function onDocTypeChange(){
-  ensureNumberFor($('#docType').value);
-}
-
-function ensureNumberFor(type){
-  const cfg = numberConfig[type] || numberConfig.TAX_INVOICE;
-  if (!($('#invNumber').value||'').trim()) $('#invNumber').value = nextNumber(cfg);
-}
-
-function nextNumber(cfg){
-  const n = parseInt(localStorage.getItem(cfg.counterKey) || '1',10);
-  return cfg.prefix + String(n).padStart(3,'0');
-}
-
-function incCounter(cfg){
-  const n = parseInt(localStorage.getItem(cfg.counterKey) || '1',10) + 1;
-  localStorage.setItem(cfg.counterKey, String(n));
-}
-
-/* =====================================================
-   ITEMS & TOTALS (with internal Markup%)
-===================================================== */
-function addItem(desc='', qty=1, basePrice=0, markup=0){
+function addItem(d='',q=1,p=0,m=0) {
   const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td data-label="Description">
-      <input class="desc" placeholder="Description" value="${desc}">
-    </td>
-    <td data-label="Qty">
-      <input class="qty" type="number" step="0.01" value="${qty}">
-    </td>
-    <td data-label="Unit price">
-      <input class="price" type="number" step="0.01" value="${basePrice}">
-    </td>
-    <td data-label="Markup %">
-      <input class="markup markup-col" type="number" step="0.01" value="${markup}">
-    </td>
+  tr.innerHTML = `<td data-label="Description"><input class="desc" value="${d}" placeholder="Description"></td>
+    <td data-label="Qty"><input class="qty" type="number" step="0.01" value="${q}"></td>
+    <td data-label="Unit price"><input class="price" type="number" step="0.01" value="${p}"></td>
+    <td data-label="Markup %"><input class="markup markup-col" type="number" step="0.01" value="${m}"></td>
     <td data-label="Line total" class="right lineTotal">R 0.00</td>
-    <td data-label="Actions" class="right">
-      <button class="btn outline del" type="button" aria-label="Remove item">✕</button>
-    </td>
-  `;
-  itemsBody().appendChild(tr);
-  tr.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
-  tr.querySelector('.del').addEventListener('click', () => { tr.remove(); updateTotals(); });
-  updateTotals();
+    <td data-label="Actions"><button class="btn outline del">✕</button></td>`;
+  $('#itemsBody').appendChild(tr);
+  tr.querySelectorAll('input').forEach(i=>i.oninput=updateTotals);
+  tr.querySelector('.del').onclick=()=>{tr.remove();updateTotals();};
 }
+$('#addItem').onclick=()=>addItem();
 
-
-function gatherItems(){
-  const rows = [...itemsBody().querySelectorAll('tr')];
-  return rows
-    .map(r => {
-      const d    = r.querySelector('.desc').value.trim();
-      const q    = parseFloat(r.querySelector('.qty').value)   || 0;
-      const base = parseFloat(r.querySelector('.price').value) || 0;
-      const m    = parseFloat(r.querySelector('.markup')?.value) || 0;
-      
-      const vatRate      = parseFloat($('#vatRate').value) || 0;
-      const vatPortion   = base * (vatRate / 100);
-      const costInclVAT  = base + vatPortion;
-      const markupAmount = base * (m / 100);
-      const adj          = costInclVAT + markupAmount;
-
-      return { d, q, p: adj, basePrice: base, markup: m, total: q * adj };
-    })
-    .filter(i => i.d || i.q || i.basePrice || i.markup);
-}
-
-function updateTotals(){
-  const currency = $('#currency').value;
-  const items = gatherItems();
-  let subtotal = items.reduce((s,i)=>s + i.total, 0);
-  const discountRate = parseFloat($('#discountRate').value)||0;
-  const vatRate = parseFloat($('#vatRate').value)||0;
-  const discount = subtotal * (discountRate/100);
-  const taxable = Math.max(0, subtotal - discount);
-  const vat = taxable * (vatRate/100);
-  const grand = taxable + vat;
-  [...itemsBody().querySelectorAll('tr')].forEach((r,i) => {
-    const t = items[i]?.total || 0;
-    r.querySelector('.lineTotal').textContent = fmt(t, currency);
+function gatherItems() {
+  return $$('#itemsBody tr').map(tr=>{
+    const q=+tr.querySelector('.qty').value||0;
+    const p=+tr.querySelector('.price').value||0;
+    const m=+tr.querySelector('.markup').value||0;
+    const v=+($('#vatRate').value)||0;
+    const priceIncl = p*(1+v/100)*(1+m/100);
+    const total = q*priceIncl;
+    return {desc:tr.querySelector('.desc').value.trim(), total, priceIncl};
   });
-  $('#subtotal').textContent = fmt(subtotal, currency);
-  $('#vat').textContent = fmt(vat, currency);
-  $('#grand').textContent = fmt(grand, currency);
 }
-
-function getTotals(){
+function updateTotals() {
   const items = gatherItems();
-  let subtotal = items.reduce((s,i)=>s + i.total, 0);
-  const discount = subtotal * ((parseFloat($('#discountRate').value)||0)/100);
-  const taxable = Math.max(0, subtotal - discount);
-  const vat = taxable * ((parseFloat($('#vatRate').value)||0)/100);
-  const grand = taxable + vat;
-  return {subtotal, discount, vat, grand};
+  const subtotal = items.reduce((s,i)=>s+i.total,0);
+  const disc = subtotal*(+$('#discountRate').value||0)/100;
+  const taxable = subtotal-disc;
+  const vat = taxable*(+$('#vatRate').value||0)/100;
+  const grand = taxable+vat;
+  const cur = $('#currency').value;
+  $$('#itemsBody tr').forEach((tr,i)=>tr.querySelector('.lineTotal').textContent=fmt(items[i]?.total||0,cur));
+  $('#subtotal').textContent=fmt(subtotal,cur);
+  $('#vat').textContent=fmt(vat,cur);
+  $('#grand').textContent=fmt(grand,cur);
 }
+$('#currency,#vatRate,#discountRate').oninput=updateTotals;
 
-/* =====================================================
-   SAVE / RECORDS
-===================================================== */
+function clientLabel(c){return c.rep?`${c.company} — ${c.rep}`:c.company;}
+function loadClients(){
+  const clients = JSON.parse(localStorage.getItem('clients')||'[]');
+  $('#clientPicker').innerHTML='<option value="">— Select saved —</option>'+clients.map((c,i)=>`<option value="${i}">${clientLabel(c)}</option>`).join('');
+}
+$('#clientPicker').onchange=()=>{
+  const i=$('#clientPicker').value;
+  if(i==='')return;
+  const c=JSON.parse(localStorage.getItem('clients')||'[]')[i];
+  $('#clientCompany').value=c.company||''; $('#clientRep').value=c.rep||''; $('#clientVAT').value=c.vat||'';
+  $('#clientAddress').value=c.address||''; $('#clientEmail').value=c.email||'';
+};
+$('#saveClientBtn').onclick=()=>{
+  const c={company:$('#clientCompany').value.trim(),rep:$('#clientRep').value.trim(),vat:$('#clientVAT').value.trim(),
+    address:$('#clientAddress').value.trim(),email:$('#clientEmail').value.trim()};
+  if(!c.company)return alert('Enter company name');
+  let clients=JSON.parse(localStorage.getItem('clients')||'[]');
+  clients=clients.filter(x=>x.company!==c.company); clients.push(c);
+  localStorage.setItem('clients',JSON.stringify(clients));
+  loadClients(); alert('Client saved');
+};
+$('#deleteClientBtn').onclick=()=>{
+  const i=$('#clientPicker').value;
+  if(!i)return alert('Select a client');
+  if(!confirm('Delete?'))return;
+  let clients=JSON.parse(localStorage.getItem('clients')||'[]');
+  clients.splice(i,1); localStorage.setItem('clients',JSON.stringify(clients));
+  loadClients();
+};
+
 function readForm(){
-  const client = getClientFormValues();
-  return {
-    type: $('#docType').value,
-    bizName: $('#bizName').value,
-    bizDetails: $('#bizDetails').value,
-    bizEmail: $('#bizEmail').value,
-    bizAddress: $('#bizAddress').value,
-    bizVAT: $('#bizVAT').value,
-    ...client,
-    invNumber: ($('#invNumber').value||'').trim(),
-    invDate: $('#invDate').value,
-    dueDate: $('#dueDate').value,
-    customerPO: ($('#customerPO').value||'').trim(),
-    currency: $('#currency').value,
-    vatRate: parseFloat($('#vatRate').value)||0,
-    discountRate: parseFloat($('#discountRate').value)||0,
-    payLink: $('#payLink').value,
-    notes: $('#notes').value,
-    items: gatherItems(),
-    totals: getTotals(),
-    status: 'open',
-    savedAt: Date.now()
-  };
+  const items=gatherItems();
+  const subtotal=items.reduce((s,i)=>s+i.total,0);
+  const disc=subtotal*(+$('#discountRate').value||0)/100;
+  const vat=(subtotal-disc)*(+$('#vatRate').value||0)/100;
+  const grand=subtotal-disc+vat;
+  return {type:$('#docType').value,invNumber:$('#invNumber').value,invDate:$('#invDate').value,dueDate:$('#dueDate').value,
+    customerPO:$('#customerPO').value,currency:$('#currency').value,vatRate:+$('#vatRate').value,discountRate:+$('#discountRate').value,
+    payLink:$('#payLink').value,notes:$('#notes').value,company:$('#clientCompany').value,rep:$('#clientRep').value,
+    clientVAT:$('#clientVAT').value,email:$('#clientEmail').value,address:$('#clientAddress').value,bizVAT:$('#bizVAT').value,
+    items:$$('#itemsBody tr').map(tr=>({d:tr.querySelector('.desc').value,q:+tr.querySelector('.qty').value,
+      p:+tr.querySelector('.price').value,m:+tr.querySelector('.markup').value})),totals:{subtotal,disc,vat,grand},savedAt:Date.now()};
 }
-
-function writeForm(d){
-  $('#docType').value = d.type || 'TAX_INVOICE';
-  $('#bizName').value = d.bizName || "Nico's Auto & Agri";
-  $('#bizDetails').value = d.bizDetails || 'Tel: 079 568 1706 / 067 277 0183';
-  $('#bizEmail').value = d.bizEmail || 'nicosauto@outlook.com';
-  $('#bizAddress').value = d.bizAddress || '98 Diemeer Str, Welgelegen, Polokwane, 0699';
-  $('#bizVAT').value = d.bizVAT || '';
-  setClientForm(d);
-  $('#invNumber').value = d.invNumber || '';
-  $('#invDate').value = d.invDate || '';
-  $('#dueDate').value = d.dueDate || '';
-  $('#customerPO').value = d.customerPO || '';
-  $('#currency').value = d.currency || 'ZAR';
-  $('#vatRate').value = d.vatRate ?? 15;
-  $('#discountRate').value = d.discountRate ?? 0;
-  $('#payLink').value = d.payLink || '';
-  $('#notes').value = d.notes || '';
-  itemsBody().innerHTML = '';
-  // Migrate older docs (no markup/basePrice): treat saved p as base and markup 0
-  (d.items||[]).forEach(i=>{
-    const base = (typeof i.basePrice === 'number') ? i.basePrice : (typeof i.p === 'number' ? i.p : 0);
-    const mk = (typeof i.markup === 'number') ? i.markup : 0;
-    addItem(i.d, i.q, base, mk);
-  });
-  if ((d.items||[]).length===0){ addItem(); addItem(); }
-  updateTotals();
+function saveDoc(doc){
+  let list=JSON.parse(localStorage.getItem('docs')||'[]');
+  list=list.filter(d=>!(d.type===doc.type&&d.invNumber===doc.invNumber));
+  list.push(doc); localStorage.setItem('docs',JSON.stringify(list));
 }
-
-function saveDoc(inv){
-  let list;
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey) || '[]'); }
-  catch { list = []; }
-  const idx = list.findIndex(x => x.invNumber === inv.invNumber && x.type === inv.type);
-  if (idx>=0) list[idx] = inv; else list.push(inv);
-  localStorage.setItem(storage.docsKey, JSON.stringify(list));
+function resetForm(){
+  $('#customerPO').value=''; $('#discountRate').value=0; $('#payLink').value=''; $('#notes').value='';
+  $('#clientCompany').value=$('#clientRep').value=$('#clientVAT').value=$('#clientEmail').value=$('#clientAddress').value='';
+  $('#itemsBody').innerHTML=''; addItem(); addItem(); updateTotals(); applyNote();
 }
+$('#saveBtn').onclick=()=>{
+  let doc=readForm();
+  if(!doc.invNumber){doc.invNumber=nextNumber(doc.type);$('#invNumber').value=doc.invNumber;}
+  saveDoc(doc); inc(doc.type); alert('Saved '+doc.invNumber); resetForm(); autoSetup();
+};
+$('#convertBtn').onclick=()=>{
+  if(!$('#clientCompany').value)return alert('Add client first');
+  let doc=readForm(); saveDoc(doc);
+  $('#docType').value='TAX_INVOICE'; ensureNumber();
+  $('#notes').value+=(($('#notes').value?'\\n\\n':'')+'Converted from '+$('#docType').options[$('#docType').selectedIndex].text+' '+doc.invNumber);
+  downloadPDF(); alert('Converted! New number: '+$('#invNumber').value);
+};
+$('#emailBtn').onclick=()=>{
+  let doc=readForm();
+  if(!doc.invNumber){doc.invNumber=nextNumber(doc.type);$('#invNumber').value=doc.invNumber;}
+  saveDoc(doc); inc(doc.type);
+  const label=$('#docType').value==='QUOTE'?'Quote':$('#docType').value==='PRO_FORMA'?'Pro forma invoice':'Tax invoice';
+  const note=doc.notes||(doc.type!=='TAX_INVOICE'?'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies':'Thank you for your business.');
+  const body=encodeURIComponent(`Hi ${doc.rep||doc.company||''},
 
-function resetFormForNext(type){
-  const docType = type || $('#docType').value || 'TAX_INVOICE';
-  $('#docType').value = docType;
+Please find attached ${label} ${doc.invNumber}.
+${doc.customerPO?`PO: ${doc.customerPO}\n`:''}Total: ${fmt(doc.totals.grand,doc.currency)}
+${doc.payLink?`Pay online: ${doc.payLink}\n`:''}
+${note}
 
-  const cfg = numberConfig[docType] || numberConfig.TAX_INVOICE;
-  $('#invNumber').value = nextNumber(cfg);
-  $('#invDate').value = luxon.DateTime.now().toISODate();
-  $('#dueDate').value = luxon.DateTime.now().plus({days:7}).toISODate();
+Regards,
+Nico's Auto & Agri`);
+  location.href=`mailto:${doc.email}?subject=${encodeURIComponent(label+' '+doc.invNumber)}&body=${body}`;
+};
 
-  // Clear client-facing fields
-  if ($('#clientCompany')) $('#clientCompany').value = '';
-  if ($('#clientRep')) $('#clientRep').value = '';
-  if ($('#clientVAT')) $('#clientVAT').value = '';
-  if ($('#clientEmail')) $('#clientEmail').value = '';
-  if ($('#clientAddress')) $('#clientAddress').value = '';
-  if ($('#customerPO')) $('#customerPO').value = '';
-
-  // Financials and notes
-  $('#discountRate').value = 0;
-  $('#notes').value = '';
-  $('#payLink').value = '';
-
-  // Items: two fresh rows
-  itemsBody().innerHTML = '';
-  addItem(); addItem();
-  updateTotals();
-
-  // focus PO for quick entry
-  setTimeout(()=>$('#customerPO')?.focus(), 0);
-}
-
-function onSaveClick(){
-  const inv = readForm();
-  const cfg = numberConfig[inv.type];
-
-  // Assign number if empty
-  if (!inv.invNumber){
-    inv.invNumber = nextNumber(cfg);
-    $('#invNumber').value = inv.invNumber;
-  }
-
-  saveDoc(inv);
-
-  // If saved number equals current counter display, advance counter
-  if (inv.invNumber === nextNumber(cfg)) {
-    incCounter(cfg);
-  }
-
-  alert('Saved.');
-
-  // Reset the form to a brand-new document with the next number and two empty items
-  resetFormForNext(inv.type);
-}
-
-async function onEmailClick(){
-  await downloadPDF();
-  const inv = readForm();
-  const cfg = numberConfig[inv.type];
-  if (!inv.invNumber){
-    inv.invNumber = nextNumber(cfg);
-    $('#invNumber').value = inv.invNumber;
-  }
-  saveDoc(inv);
-  if (inv.invNumber === nextNumber(cfg)) incCounter(cfg);
-  // Keep current content for emailing; do not reset automatically on email.
-  openEmailDraft(inv);
-}
-
-function openEmailDraft(inv){
-  const label = clientLabel(inv);
-  const greet = inv.rep ? inv.rep : label;
-  const subject = encodeURIComponent(`${labelForType(inv.type)} ${inv.invNumber} - ${inv.bizName||''}`);
-  const body = encodeURIComponent([
-    `Hi ${greet},`,
-    '',
-    `Please find attached ${labelForType(inv.type).toLowerCase()} ${inv.invNumber}.`,
-    inv.customerPO ? `Customer PO: ${inv.customerPO}` : '',
-    `Total: ${money(inv.totals.grand, inv.currency)} (VAT ${inv.vatRate}% included)`,
-    inv.payLink ? `Pay online: ${inv.payLink}` : '',
-    '',
-    inv.notes || (inv.type === 'QUOTE' ? 'Payment to be made in 7 days',
-    '',
-    `${inv.bizName||''}`,
-  ].filter(Boolean).join('\n'));
-  location.href = `mailto:${inv.email||inv.clientEmail||''}?subject=${subject}&body=${body}`;
-}
-
-function labelForType(t){
-  return t==='QUOTE'?'Quote':(t==='PRO_FORMA'?'Pro forma invoice':'Tax invoice');
-}
-
-/* =====================================================
-   CONVERT TO INVOICE
-===================================================== */
-async function onConvertToInvoice(){
-  const current = readForm();
-  if (!(current.company || current.clientCompany || current.clientName || current.name)){ alert('Enter client details first'); return; }
-  if (current.type==='QUOTE') current.status='accepted';
-  saveDoc(current);
-
-  const cfg = numberConfig.TAX_INVOICE;
-  const newDoc = { ...current, type:'TAX_INVOICE' };
-  newDoc.invNumber = nextNumber(cfg);
-  newDoc.invDate = luxon.DateTime.now().toISODate();
-  newDoc.dueDate = luxon.DateTime.now().plus({days:7}).toISODate();
-  newDoc.notes = (current.notes? current.notes+'\n' : '') + `Converted from ${labelForType(current.type)} ${current.invNumber}.`;
-  writeForm(newDoc);
-  updateTotals();
-
-  await downloadPDF();
-  saveDoc(readForm());
-  incCounter(cfg);
-  alert('Converted to tax invoice.');
-}
-
-/* =====================================================
-   RECORDS VIEW
-===================================================== */
 function refreshRecords(){
-  const qBody = $('#tblQuotes tbody');
-  const pBody = $('#tblProforma tbody');
-  const tBody = $('#tblTax tbody');
-  [qBody,pBody,tBody].forEach(tb=>tb.innerHTML='');
-  const q = ($('#searchBox').value||'').toLowerCase();
-
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem(storage.docsKey)||'[]'); }
-  catch { list = []; }
-  list.sort((a,b)=>b.savedAt-a.savedAt);
-
-  list.forEach(d=>{
-    const row = document.createElement('tr');
-    const total = d.totals?.grand || 0;
-    const label = clientLabel(d);
-    const match = [d.invNumber,label,total].join(' ').toLowerCase().includes(q);
-    if (!match) return;
-    row.innerHTML = `
-      <td>${d.invNumber||''}</td>
-      <td>${d.invDate||''}</td>
-      <td>${label}</td>
-      <td class="right">${fmt(total, d.currency||'ZAR')}</td>
-      <td>${d.status||'open'}</td>
-      <td class="table-actions">
-        <button data-num="${d.invNumber}" data-type="${d.type}" class="openBtn" type="button">Open</button>
-      </td>`;
-    if (d.type==='QUOTE') qBody.appendChild(row);
-    else if (d.type==='PRO_FORMA') pBody.appendChild(row);
-    else tBody.appendChild(row);
+  const q=$('#searchBox').value.toLowerCase();
+  let docs=JSON.parse(localStorage.getItem('docs')||'[]').sort((a,b)=>b.savedAt-a.savedAt);
+  ['QUOTE','PRO_FORMA','TAX_INVOICE'].forEach(t=>{
+    const tbody=$(t==='QUOTE'?'#tblQuotes':t==='PRO_FORMA'?'#tblProforma':'#tblTax').querySelector('tbody');
+    tbody.innerHTML='';
+    docs.filter(d=>d.type===t).forEach(d=>{
+      if(!q || d.invNumber.toLowerCase().includes(q) || d.company.toLowerCase().includes(q)){
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${d.invNumber}</td><td>${d.invDate}</td><td>${clientLabel(d)}</td><td class="right">${fmt(d.totals.grand,d.currency)}</td><td>Open</td><td><button class="btn outline">Open</button></td>`;
+        tr.querySelector('button').onclick=()=>{show('create');writeForm(d);};
+        tbody.appendChild(tr);
+      }
+    });
   });
-  document.querySelectorAll('.openBtn').forEach(b=>b.addEventListener('click', e=>{
-    const num = e.target.getAttribute('data-num');
-    const type = e.target.getAttribute('data-type');
-    const list2 = JSON.parse(localStorage.getItem(storage.docsKey)||'[]');
-    const doc = list2.find(x=>x.invNumber===num && x.type===type);
-    if (doc){ showView('create'); writeForm(doc); updateTotals(); }
-  }));
 }
-
-/* =====================================================
-   PDF GENERATION (logo-safe)
-===================================================== */
-function wrapText(doc, text, x, y, maxW){
-  const lines = doc.splitTextToSize(text || '', maxW);
-  doc.text(lines, x, y);
-}
-
-async function getHeaderLogo() {
-  const headerImg = document.querySelector('#logo');
-  if (headerImg && headerImg.src && headerImg.complete && headerImg.naturalWidth) return headerImg;
-  const img = new Image();
-  img.src = 'logo.png';
-  await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
-  return img;
-}
-
-function detectImgType(src) {
-  const ext = (src.split('?')[0].split('.').pop() || '').toLowerCase();
-  if (ext === 'jpg' || ext === 'jpeg') return 'JPEG';
-  if (ext === 'webp') return 'WEBP';
-  return 'PNG';
-}
-
-function imgToDataURL(imgEl) {
-  const canvas = document.createElement('canvas');
-  const w = imgEl.naturalWidth || imgEl.width || 300;
-  const h = imgEl.naturalHeight || imgEl.height || 300;
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(imgEl, 0, 0);
-  try { return canvas.toDataURL('image/png'); } catch { return null; }
+function writeForm(d){
+  $('#docType').value=d.type; ensureNumber(); $('#invNumber').value=d.invNumber;
+  $('#invDate').value=d.invDate; $('#dueDate').value=d.dueDate; $('#customerPO').value=d.customerPO||'';
+  $('#currency').value=d.currency||'ZAR'; $('#vatRate').value=d.vatRate||15; $('#discountRate').value=d.discountRate||0;
+  $('#payLink').value=d.payLink||''; $('#notes').value=d.notes||''; $('#bizVAT').value=d.bizVAT||'';
+  $('#clientCompany').value=d.company||''; $('#clientRep').value=d.rep||''; $('#clientVAT').value=d.vat||'';
+  $('#clientEmail').value=d.email||''; $('#clientAddress').value=d.address||'';
+  $('#itemsBody').innerHTML=''; (d.items||[]).forEach(i=>addItem(i.d,i.q,i.p,i.m));
+  if(!d.items||d.items.length===0){addItem();addItem();}
+  updateTotals(); applyNote();
 }
 
 async function downloadPDF(){
-  const inv = readForm();
-  const { jsPDF } = window.jspdf || {};
-  if (!jsPDF) { alert('PDF engine not found'); return; }
-
-  const doc = new jsPDF({unit:'pt', format:'a4'});
-  const M = 44;
-  const W = doc.internal.pageSize.getWidth();
-  const BRAND = [15,123,108], INK = [31,41,55], MUTED = [107,114,128];
-
-  const bandH = 90;
-
-  // Top header band with doc type + number only
-  doc.setFillColor(...BRAND);
-  doc.rect(0, 0, W, bandH, 'F');
-
-  const title = labelForType(inv.type);
-  doc.setTextColor(255,255,255);
-  doc.setFont('helvetica', 'bold').setFontSize(18);
-  doc.text(title.toUpperCase(), M, 56);
-
-  if (inv.invNumber) {
-    const invNumW = doc.getTextWidth(inv.invNumber);
-    doc.text(inv.invNumber, W - M - invNumW, 56);
-  }
-
-  // Move down: logo + company name
-  doc.setTextColor(...INK);
-  let logoW = 0, logoH = 0;
-  const logoY = bandH + 24; // push logo below the band
-  try {
-    const logoEl = await getHeaderLogo();
-    if (logoEl) {
-      const maxW = 56, maxH = 56;
-      const scale = Math.min(maxW / (logoEl.naturalWidth||maxW), maxH / (logoEl.naturalHeight||maxH));
-      logoW = Math.max(1, (logoEl.naturalWidth||maxW) * scale);
-      logoH = Math.max(1, (logoEl.naturalHeight||maxH) * scale);
-      const type = detectImgType(logoEl.src);
-      let added = false;
-      try { doc.addImage(logoEl, type, M, logoY, logoW, logoH); added = true; }
-      catch {
-        const dataURL = imgToDataURL(logoEl);
-        if (dataURL) { doc.addImage(dataURL, 'PNG', M, logoY, logoW, logoH); added = true; }
-      }
-      if (!added) console.warn('Logo could not be embedded into PDF.');
-    }
-  } catch (err) { console.warn('Logo could not be loaded for PDF', err); }
-
-  // Company name aligned to logo
-  const nameY = logoY + Math.max(20, (logoH||40)/2);
-  doc.setFont('helvetica','bold').setFontSize(14);
-  if (inv.bizName) doc.text(inv.bizName, M + (logoW||0) + 12, nameY);
-
-  // Compute content top after the logo block
-  const contentTop = Math.max(bandH + 24, logoY + (logoH||0));
-
-  // Tagline
-  doc.setFont('helvetica','normal').setFontSize(10);
-  doc.setTextColor(...MUTED);
-  const taglineY = contentTop + 14;
-  doc.text('Repairs • Parts • Diagnostics • Field Service', M, taglineY);
-  doc.setTextColor(...INK);
-
-  // Business info block (address, VAT, tel)
-  const bizLines = [];
-  if (inv.bizAddress) bizLines.push(inv.bizAddress);
-  if (inv.bizVAT) bizLines.push(`VAT: ${inv.bizVAT}`);
-  if (inv.bizDetails) bizLines.push(inv.bizDetails); // includes Tel
-
-  const infoY = taglineY + 16;
-  let bizBottomY = infoY;
-  if (bizLines.length) {
-    const linesArr = doc.splitTextToSize(bizLines.join('\n'), 240);
-    doc.text(linesArr, M, infoY);
-    const lineHeight = 12; // approx for 10pt
-    bizBottomY = infoY + Math.max(0, (linesArr.length-1) * lineHeight);
-  }
-
-  // Dates + PO on left
-  const datesY = Math.max(bizBottomY + 12, infoY + 24);
-  if (inv.invDate) doc.text(`Date: ${inv.invDate}`, M, datesY);
-  if (inv.dueDate) doc.text(`Due: ${inv.dueDate}`, M+160, datesY);
-  if (inv.customerPO) doc.text(`Customer PO: ${inv.customerPO}`, M, datesY + 16);
-  const leftBottomY = datesY + 20;
-
-  // Bill To on right, aligned to contentTop
-  doc.setFont('helvetica','bold');
-  const rightTop = contentTop + 14;
-  doc.text('Bill To', W/2, rightTop);
-
-  const company = inv.company || inv.clientCompany || inv.clientName || inv.name || '';
-  const rep     = inv.rep || inv.clientRep || '';
-  const vatNo   = inv.vat || inv.clientVAT || '';
-  const email   = inv.email || inv.clientEmail || '';
-  const addr    = inv.address || inv.clientAddress || '';
-
-  let yPos = rightTop + 16;
-  if (company) { doc.text(company, W/2, yPos); yPos += 16; }
-  doc.setFont('helvetica','normal');
-
-  const billLines = [];
-  if (rep)   billLines.push(`Attn: ${rep}`);
-  if (vatNo) billLines.push(`VAT: ${vatNo}`);
-  if (email) billLines.push(email);
-  if (addr)  billLines.push(addr);
-
-  let billBottomY = yPos;
-  if (billLines.length) {
-    const billArr = doc.splitTextToSize(billLines.join('\n'), 240);
-    doc.text(billArr, W/2, yPos);
-    const lineHeight = 12;
-    billBottomY = yPos + Math.max(0, (billArr.length - 1) * lineHeight);
-  }
-
-  // Items table starts after the lower of left or right columns
-  const itemsStartY = Math.max(leftBottomY, billBottomY) + 24;
-
-  // Items (client-facing: only adjusted unit price i.p, never markup/base)
-  const body = (inv.items || []).map(i => [
-    i.d,
-    i.q,
-    money(i.p, inv.currency),
-    money(i.total, inv.currency)
-  ]);
-
-  doc.autoTable({
-    startY: Math.max(itemsStartY, 230),
-    head: [['Description','Qty','Unit','Total']],
-    body,
-    theme: 'striped',
-    styles: { font: 'helvetica', fontSize: 10, cellPadding: 6 },
-    headStyles: { fillColor: [239,250,247], textColor: INK },
-    columnStyles: {
-      0: { cellWidth: 240 },
-      1: { cellWidth: 60, halign: 'right' },
-      2: { cellWidth: 100, halign: 'right' },
-      3: { cellWidth: 100, halign: 'right' }
-    },
-    margin: { left: M, right: M }
-  });
-
-  let y = (doc.lastAutoTable && doc.lastAutoTable.finalY)
-    ? doc.lastAutoTable.finalY + 10
-    : Math.max(itemsStartY, 240);
-
-  // Totals
-  const t = inv.totals || { subtotal:0, discount:0, vat:0, grand:0 };
-  const linesTotals = [
-    ['Subtotal', money(t.subtotal, inv.currency)],
-    ['Discount', money(t.discount, inv.currency)],
-    ['VAT',      money(t.vat,      inv.currency)],
-    ['Total',    money(t.grand,    inv.currency)]
-  ];
-  const rightX = W - M - 200;
-
-  doc.setFont('helvetica','bold');
-  doc.text('Totals', rightX, y + 6);
-  y += 10;
-  doc.setFont('helvetica','normal');
-
-  linesTotals.forEach(row => {
-    y += 18;
-    doc.text(row[0], rightX, y);
-    doc.text(row[1], rightX + 120, y, { align: 'right' });
-  });
-
-  // Payment + Notes
-  y += 30;
-  if (inv.payLink){
-    doc.setTextColor(...BRAND).textWithLink('Pay now', M, y, { url: inv.payLink });
-    doc.setTextColor(...INK);
-  }
-  wrapText(
-    doc,
-    inv.notes || (inv.type === 'QUOTE' ? 'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies' : 'Thank you for your business.'),
-    M,
-    y + 20,
-    420
-  );
-
-  // Banking details (static)
-  (function renderBankingDetails(){
-    const pageH = doc.internal.pageSize.getHeight();
-    const lastTableY = (doc.lastAutoTable && doc.lastAutoTable.finalY) ? doc.lastAutoTable.finalY : 0;
-
-    let bankY = Math.max(y + 60, lastTableY + 40, 120);
-    if (bankY > pageH - 140) {
-      doc.addPage();
-      bankY = 120;
-    }
-
-    // Subtle separator
-    doc.setDrawColor(229,231,235).setLineWidth(0.7);
-    doc.line(M, bankY - 10, W - M, bankY - 10);
-
-    doc.setFont('helvetica','bold').setFontSize(11).setTextColor(...INK);
-    doc.text('Banking details', M, bankY);
-
-    doc.setFont('helvetica','normal').setFontSize(10).setTextColor(...MUTED);
-    doc.text([
-      'Name: IC Schutte',
-      'Bank: Capitec saving',
-      'Account number: 1680306187',
-      'Branch code: 470010'
-    ], M, bankY + 14);
-  })();
-
-  // Footer
-  doc.setFontSize(9).setTextColor(107,114,128);
-  if (inv.bizEmail) doc.text(inv.bizEmail, M, 820);
-
-  const filename = (inv.invNumber || title.replace(/\s+/g,'_')) + '.pdf';
-  doc.save(filename);
+  const data=readForm();
+  const doc=new jsPDF();
+  const w=doc.internal.pageSize.getWidth();
+  const m=20;
+  doc.setFillColor(15,123,108); doc.rect(0,0,w,55,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(22);
+  doc.text(data.type==='QUOTE'?'QUOTE':data.type==='PRO_FORMA'?'PRO FORMA INVOICE':'TAX INVOICE',m,38);
+  doc.setFontSize(16); doc.text(data.invNumber,w-m-doc.getTextWidth(data.invNumber),38);
+  try{const img=document.querySelector('#logo');if(img)doc.addImage(img,'PNG',m,60,50,50);}catch(e){}
+  doc.setTextColor(0,0,0); doc.setFontSize(16); doc.text("Nico’s Auto & Agri",m+60,75);
+  doc.setFontSize(10); doc.text("98 Diemeer Str, Welgelegen, Polokwane, 0699",m+60,85);
+  doc.text("Tel: 079 568 1706 / 067 277 0183 • nicosauto@outlook.com",m+60,93);
+  doc.setFontSize(12); doc.text("Bill to:",110,75);
+  doc.text(data.company,110,87); if(data.rep)doc.text("Attn: "+data.rep,110,97);
+  const body=data.items.map(i=>[i.d,i.q,fmt(i.p*(1+i.m/100),data.currency),fmt(i.q*i.p*(1+i.m/100)*(1+data.vatRate/100),data.currency)]);
+  doc.autoTable({startY:120,head:[['Description','Qty','Unit Price','Total']],body,theme:'striped',
+    headStyles:{fillColor:[15,123,108]},styles:{fontSize:10}});
+  const y=doc.lastAutoTable.finalY+20;
+  doc.setFontSize(12);
+  doc.text("Subtotal: "+fmt(data.totals.subtotal,data.currency),w-m-90,y);
+  if(data.totals.disc)doc.text("Discount: -"+fmt(data.totals.disc,data.currency),w-m-90,y+12);
+  doc.text("VAT: "+fmt(data.totals.vat,data.currency),w-m-90,y+24);
+  doc.setFontSize(16); doc.text("TOTAL: "+fmt(data.totals.grand,data.currency),w-m-90,y+44);
+  const note=data.notes||(data.type!=='TAX_INVOICE'?'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies':'Thank you for your business.');
+  doc.setFontSize(10); doc.text(doc.splitTextToSize(note,w-40),m,y+70);
+  doc.setFontSize(10); doc.text("Banking: IC Schutte • Capitec Savings • 1680306187 • Branch 470010",m,doc.internal.pageSize.getHeight()-30);
+  doc.save(data.invNumber+'.pdf');
 }
+
+autoSetup(); addItem(); addItem(); loadClients(); updateTotals();
 </script>
 </body>
 </html>
