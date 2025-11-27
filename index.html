@@ -1,40 +1,53 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nico’s Auto & Agri — Billing</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sanitize.css" />
 <style>
-  :root{--brand:#0f7b6c;--bg:#f9fafb;--line:#e5e7eb;}
-  body{font-family:system-ui,sans-serif;background:var(--bg);color:#1f2937;padding:12px;max-width:980px;margin:auto;line-height:1.5;}
-  nav{position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:999;box-shadow:0 -4px 20px rgba(0,0,0,.1);padding:12px;display:flex;gap:10px;justify-content:center;}
-  nav button{padding:16px 24px;border:1px solid var(--brand);border-radius:12px;background:#fff;color:var(--brand);font-weight:700;font-size:1.1rem;flex:1;max-width:220px;}
-  nav button.active{background:var(--brand);color:#fff;}
-  .sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding-bottom:100px;}
-  .sheet>header{display:flex;gap:20px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:20px;}
-  #logo{width:180px;height:auto;}
-  h1{margin:0;font-size:26px;color:var(--brand);font-weight:800;}
-  .card{border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0;background:#fff;}
-  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;}
-  .col-3{grid-column:span 3;}.col-4{grid-column:span 4;}.col-6{grid-column:span 6;}
-  @media (max-width:720px){.col-3,.col-4,.col-6{grid-column:span 12;}}
-  label{font-weight:600;color:#555;margin-bottom:6px;display:block;}
-  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;}
-  textarea{min-height:100px;}
-  table{width:100%;border-collapse:collapse;margin-top:10px;}
-  th,td{padding:12px;border-bottom:1px solid #eee;}
-  th{background:#f8f9fa;color:#555;font-weight:700;}
-  .btn{background:var(--brand);color:#fff;border:none;border-radius:12px;padding:14px 24px;font-weight:700;cursor:pointer;font-size:1.05rem;}
-  .btn.outline{background:transparent;color:var(--brand);border:2px solid var(--brand);}
-  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
-  .right{text-align:right;}
-  .hidden{display:none;}
+  :root{
+    --brand:#0f7b6c; --accent:#eefaf7; --ink:#1f2937; --muted:#6b7280; --bg:#f9fafb; --line:#e5e7eb;
+  }
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:980px;margin:auto;}
+  nav{display:flex;gap:8px;position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:999;box-shadow:0 -2px 10px rgba(0,0,0,.1);padding:10px;justify-content:center;}
+  nav button{padding:14px 20px;border:1px solid var(--brand);border-radius:12px;background:#fff;color:var(--brand);font-weight:700;cursor:pointer;flex:1;max-width:220px;font-size:1rem;}
+  nav button.active{background:var(--brand);color:#fff}
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding-bottom:80px;overflow:hidden;}
+  .sheet > header{display:flex;gap:20px;align-items:center;border-bottom:2px solid var(--line);padding-bottom:16px;margin-bottom:20px;}
+  #logo{width:180px;height:auto;display:block;object-fit:contain}
+  .brand-block h1{margin:0 0 8px 0;font-size:24px;color:var(--brand);font-weight:800}
+  .brand-sub{margin:0;font-size:14px;color:var(--muted)}
+  .company-details{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.5}
+  @media (max-width:640px){.sheet > header{flex-direction:column;text-align:center}#logo{margin:0 auto;width:160px}}
+  .card{background:white;border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+  .row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+  .col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}.col-12{grid-column:span 12}
+  @media (max-width:720px){.col-6,.col-4,.col-3{grid-column:span 12}}
+  label{font-size:.85rem;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
+  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:#fff}
+  textarea{min-height:90px;resize:vertical}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:12px;border-bottom:1px solid #eee;font-size:.95rem}
+  th{text-align:left;color:var(--muted);font-weight:700;background:#f8f9fa}
+  tfoot td{border-top:3px double #ccc;font-weight:700;background:#f8f9fa}
+  .btn{background:var(--brand);color:#fff;border:none;border-radius:12px;padding:14px 20px;font-weight:700;cursor:pointer;font-size:1.05rem;transition:all .2s}
+  .btn.outline{background:transparent;color:var(--brand);border:2px solid var(--brand)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(15,123,108,.3)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .right{text-align:right}
+  .pill{display:inline-block;background:var(--accent);color:var(--brand);padding:4px 10px;border-radius:999px;font-size:.8rem;margin-left:8px;font-weight:600}
+  .hidden{display:none}
+  .markup-col{max-width:100px}
   @media (max-width:480px){
-    #itemsTbl thead{display:none;}
-    #itemsTbl tr,#itemsTbl td{display:block;width:100%;border-bottom:1px solid var(--line);padding:10px 0;}
-    #itemsTbl td::before{content:attr(data-label);font-weight:700;color:#555;display:block;margin-bottom:6px;}
-    #itemsTbl td:last-child{display:none;}
+    #itemsTbl thead{display:none}
+    #itemsTbl tr,#itemsTbl td{display:block;width:100%;border-bottom:1px solid var(--line);margin-bottom:12px;padding:10px 0}
+    #itemsTbl td::before{content:attr(data-label);display:block;font-weight:700;color:var(--muted);margin-bottom:6px}
+    #itemsTbl td[data-label="Actions"]{display:none}
+    .actions button{flex:1}
+    #itemsTbl input.qty,#itemsTbl input.price,#itemsTbl input.markup{max-width:100%}
+    .btn, .btn.outline{padding:16px;font-size:1.1rem}
   }
 </style>
 </head>
@@ -47,84 +60,110 @@
 
 <section id="createView" class="sheet">
   <header>
-    <img id="logo" src="logo.png" alt="" onerror="this.style.display='none'">
-    <div>
+    <img id="logo" src="logo.png" alt="Nico's Auto & Agri" onerror="this.style.display='none'">
+    <div class="brand-block">
       <h1>Nico’s Auto & Agri</h1>
-      <p style="color:#666;margin:4px 0;">98 Diemeer Str, Welgelegen, Polokwane<br>Tel: 079 568 1706 / 067 277 0183</p>
+      <p class="brand-sub">Repairs • Parts • Diagnostics • Field Service</p>
+      <p class="company-details">
+        98 Diemeer Str, Welgelegen, Polokwane, 0699<br>
+        Tel: 079 568 1706 / 067 277 0183
+      </p>
     </div>
   </header>
 
   <div class="card">
     <div class="row">
-      <div class="col-3"><label>Type</label><select id="docType">
+      <div class="col-3"><label>Document type</label><select id="docType">
         <option value="QUOTE">Quote</option>
-        <option value="PRO_FORMA">Pro forma</option>
-        <option value="TAX_INVOICE" selected>Tax Invoice</option>
+        <option value="PRO_FORMA">Pro forma invoice</option>
+        <option value="TAX_INVOICE" selected>Tax invoice</option>
       </select></div>
-      <div class="col-3"><label>PO #</label><input id="customerPO"></div>
-      <div class="col-3"><label>No.</label><input id="invNumber" readonly></div>
-      <div class="col-3"><label>Currency</label><select id="currency"><option>ZAR</option><option>USD</option><option>EUR</option></select></div>
-      <div class="col-4"><label>Date</label><input id="invDate" type="date"></div>
-      <div class="col-4"><label>Due</label><input id="dueDate" type="date"></div>
-      <div class="col-4"><label>VAT %</label><input id="vatRate" type="number" step="0.01" value="15"></div>
+      <div class="col-3"><label>Customer PO</label><input id="customerPO" placeholder="Order number"></div>
+      <div class="col-3"><label>Document no.</label><input id="invNumber" readonly></div>
+      <div class="col-3"><label>Currency</label><select id="currency">
+        <option value="ZAR" selected>ZAR (R)</option>
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+      </select></div>
+      <div class="col-4"><label>Invoice date</label><input id="invDate" type="date"></div>
+      <div class="col-4"><label>Due date</label><input id="dueDate" type="date"></div>
+      <div class="col-4"><label>VAT % <span class="pill">15%</span></label><input id="vatRate" type="number" step="0.01" value="15"></div>
     </div>
   </div>
 
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label>Client</label><input id="clientCompany" placeholder="Company">
-        <label>Contact</label><input id="clientRep" placeholder="Name">
-        <label>VAT</label><input id="clientVAT">
-        <label>Address</label><input id="clientAddress">
-        <label>Email</label><input id="clientEmail" type="email">
-        <label>Saved clients</label><select id="clientPicker"><option value="">— Select —</option></select>
-        <div class="actions"><button class="btn outline" id="saveClientBtn">Save</button><button class="btn outline" id="deleteClientBtn">Delete</button></div>
+        <label>Your business</label>
+        <input value="Nico's Auto & Agri" readonly>
+        <input value="Tel: 079 568 1706 / 067 277 0183" readonly>
+        <input value="nicosauto@outlook.com" readonly>
+        <input value="98 Diemeer Str, Welgelegen, Polokwane, 0699" readonly>
+        <label>VAT number</label><input id="bizVAT" placeholder="Your VAT number">
       </div>
       <div class="col-6">
-        <label>Your VAT</label><input id="bizVAT" placeholder="Your VAT number">
+        <label>Client Company</label><input id="clientCompany" placeholder="Company name">
+        <label>Contact Person</label><input id="clientRep" placeholder="Name">
+        <label>Client VAT</label><input id="clientVAT" placeholder="VAT number">
+        <label>Address</label><input id="clientAddress" placeholder="Full address">
+        <label>Email</label><input id="clientEmail" type="email" placeholder="email@client.com">
+        <label>Saved clients</label>
+        <select id="clientPicker"><option value="">— Select —</option></select>
+        <div class="actions">
+          <button class="btn outline" id="saveClientBtn">Save Client</button>
+          <button class="btn outline" id="deleteClientBtn">Delete</button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <label>Items</label>
+    <label>Line items</label>
     <table id="itemsTbl">
-      <thead><tr><th>Description</th><th>Qty</th><th>Price</th><th>Markup %</th><th class="right">Total</th><th></th></tr></thead>
+      <thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Markup %</th><th class="right">Total</th><th></th></tr></thead>
       <tbody id="itemsBody"></tbody>
-      <tfoot><tr><td colspan="6"><button class="btn outline" id="addItem">+ Add Item</button></td></tr></tfoot>
+      <tfoot><tr><td colspan="6"><button class="btn outline" id="addItem">Add Item</button></td></tr></tfoot>
     </table>
   </div>
 
   <div class="card">
     <div class="row">
       <div class="col-6">
-        <label>Notes</label>
-        <textarea id="notes" placeholder="Thank you..."></textarea>
-        <label>Payment link</label>
+        <label>Notes / Terms</label>
+        <textarea id="notes" placeholder="Thank you for your business..."></textarea>
+        <label>Payment Link (optional)</label>
         <input id="payLink" placeholder="https://pay.yoco.link/...">
       </div>
       <div class="col-6">
-        <table style="font-size:1.2rem;width:100%;">
+        <table style="font-size:1.1rem">
           <tr><td>Subtotal</td><td class="right" id="subtotal">R 0.00</td></tr>
-          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" style="width:80px;"></td></tr>
+          <tr><td>Discount %</td><td class="right"><input id="discountRate" type="number" step="0.01" value="0" style="width:90px;text-align:right"></td></tr>
           <tr><td>VAT</td><td class="right" id="vat">R 0.00</td></tr>
           <tr><td><strong>TOTAL</strong></td><td class="right" id="grand"><strong>R 0.00</strong></td></tr>
         </table>
       </div>
     </div>
     <div class="actions">
-      <button class="btn" id="saveBtn">Save</button>
+      <button class="btn" id="saveBtn">Save Document</button>
       <button class="btn" id="pdfBtn">Download PDF</button>
-      <button class="btn outline" id="emailBtn">Email</button>
-      <button class="btn outline" id="convertBtn">Convert to Invoice</button>
+      <button class="btn outline" id="emailBtn">Email Draft</button>
+      <button class="btn outline" id="convertBtn">Convert to Tax Invoice</button>
     </div>
   </div>
 </section>
 
 <section id="recordsView" class="sheet hidden">
-  <header><h1>Records</h1></header>
-  <input id="searchBox" placeholder="Search..." style="width:100%;padding:12px;margin:16px 0;border-radius:10px;border:1px solid #ddd;">
+  <header>
+    <img id="logo2" src="logo.png" alt="" onerror="this.style.display='none'">
+    <div class="brand-block">
+      <h1>Records</h1>
+      <p class="brand-sub">All Quotes • Pro forma • Tax Invoices</p>
+    </div>
+  </header>
+  <div style="display:flex;gap:10px;margin:16px 0;">
+    <input id="searchBox" placeholder="Search by client, number, amount..." style="flex:1;padding:12px;border-radius:10px;border:1px solid #ddd">
+    <button class="btn outline" id="refreshBtn">Refresh</button>
+  </div>
   <div class="card"><h3>Quotes</h3><table id="tblQuotes"><thead><tr><th>No.</th><th>Date</th><th>Client</th><th class="right">Amount</th><th></th></tr></thead><tbody></tbody></table></div>
   <div class="card"><h3>Pro forma</h3><table id="tblProforma"><thead><tr><th>No.</th><th>Date</th><th>Client</th><th class="right">Amount</th><th></th></tr></thead><tbody></tbody></table></div>
   <div class="card"><h3>Tax Invoices</h3><table id="tblTax"><thead><tr><th>No.</th><th>Date</th><th>Client</th><th class="right">Amount</th><th></th></tr></thead><tbody></tbody></table></div>
@@ -136,183 +175,438 @@
 <script>
 const { DateTime } = luxon;
 const { jsPDF } = window.jspdf;
+
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
+const itemsBody = () => $('#itemsBody');
 
-const prefixes = { QUOTE:'QUO', PRO_FORMA:'PFI', TAX_INVOICE:'NAA' };
-Object.keys(prefixes).forEach(k => localStorage.getItem('c_'+k) || localStorage.setItem('c_'+k, '1'));
+const numberConfig = {
+  QUOTE: { prefix: 'QUO', key: 'counter_QUOTE' },
+  PRO_FORMA: { prefix: 'PFI', key: 'counter_PRO_FORMA' },
+  TAX_INVOICE: { prefix: 'NAA', key: 'counter_TAX_INVOICE' }
+};
 
-$('#tabCreate').onclick = () => show('create');
-$('#tabRecords').onclick = () => { show('records'); refreshRecords(); };
-function show(v) {
+const storage = { docs: 'docs', clients: 'clients' };
+
+/* ==== NAVIGATION ==== */
+$('#tabCreate').onclick = () => showView('create');
+$('#tabRecords').onclick = () => showView('records');
+function showView(v) {
   $('#createView').classList.toggle('hidden', v !== 'create');
   $('#recordsView').classList.toggle('hidden', v !== 'records');
   $('#tabCreate').classList.toggle('active', v === 'create');
   $('#tabRecords').classList.toggle('active', v === 'records');
+  if (v === 'records') refreshRecords();
 }
 
-const fmt = (n, cur='ZAR') => (cur==='USD'?'$':cur==='EUR'?'€':'R') + ' ' + Number(n||0).toLocaleString('en-ZA', {minimumFractionDigits:2, maximumFractionDigits:2});
+/* ==== FORMATTERS ==== */
+const fmt = (n, cur = 'ZAR') => {
+  const sym = cur === 'USD' ? '$' : cur === 'EUR' ? '€' : 'R';
+  return `${sym} ${Number(n||0).toLocaleString('en-ZA', {minimumFractionDigits:2, maximumFractionDigits:2})}`;
+};
 
-function setNumber() {
-  const type = $('#docType').value;
-  if (!$('#invNumber').value) {
-    const n = +localStorage.getItem('c_'+type);
-    $('#invNumber').value = prefixes[type] + String(n).padStart(4,'0');
+/* ==== INIT ==== */
+document.addEventListener('DOMContentLoaded', () => {
+  Object.values(numberConfig).forEach(c => localStorage.getItem(c.key) || localStorage.setItem(c.key, '1'));
+  
+  $('#addItem').onclick = () => addItem();
+  $('#currency').onchange = $('#vatRate').oninput = $('#discountRate').oninput = updateTotals;
+  $('#docType').onchange = () => { ensureNumberFor($('#docType').value); applyDefaultNote(); };
+  
+  $('#saveBtn').onclick = onSaveClick;
+  $('#pdfBtn').onclick = downloadPDF;
+  $('#emailBtn').onclick = onEmailClick;
+  $('#convertBtn').onclick = onConvertToInvoice;
+  
+  $('#saveClientBtn').onclick = onSaveClient;
+  $('#deleteClientBtn').onclick = onDeleteClient;
+  $('#clientPicker').onchange = onClientPick;
+  $('#refreshBtn').onclick = refreshRecords;
+  $('#searchBox').oninput = () => setTimeout(refreshRecords, 300);
+
+  loadClients();
+  autoSetup();
+  addItem(); addItem();
+  updateTotals();
+});
+
+/* ==== CLIENTS ==== */
+function clientLabel(c) { return c.rep ? `${c.company} — ${c.rep}` : c.company; }
+
+function getClientForm() {
+  return {
+    company: $('#clientCompany').value.trim(),
+    rep: $('#clientRep').value.trim(),
+    vat: $('#clientVAT').value.trim(),
+    email: $('#clientEmail').value.trim(),
+    address: $('#clientAddress').value.trim()
+  };
+}
+
+function setClientForm(c = {}) {
+  $('#clientCompany').value = c.company || '';
+  $('#clientRep').value = c.rep || '';
+  $('#clientVAT').value = c.vat || '';
+  $('#clientEmail').value = c.email || '';
+  $('#clientAddress').value = c.address || '';
+}
+
+function loadClients() {
+  let clients = [];
+  try { clients = JSON.parse(localStorage.getItem(storage.clients) || '[]'); } catch(e) {}
+  $('#clientPicker').innerHTML = '<option value="">— Select saved —</option>' +
+    clients.map((c,i) => `<option value="${i}">${clientLabel(c)}</option>`).join('');
+}
+
+function onClientPick() {
+  const i = $('#clientPicker').value;
+  if (i === '') return;
+  const clients = JSON.parse(localStorage.getItem(storage.clients) || '[]');
+  setClientForm(clients[i]);
+}
+
+function onSaveClient() {
+  const c = getClientForm();
+  if (!c.company) return alert('Enter company name');
+  let clients = JSON.parse(localStorage.getItem(storage.clients) || '[]');
+  const existing = clients.findIndex(x => x.company.toLowerCase() === c.company.toLowerCase());
+  if (existing >= 0) clients[existing] = c; else clients.push(c);
+  localStorage.setItem(storage.clients, JSON.stringify(clients));
+  loadClients();
+  alert('Client saved');
+}
+
+function onDeleteClient() {
+  const i = $('#clientPicker').value;
+  if (!i) return alert('Select a client');
+  if (!confirm('Delete this client?')) return;
+  let clients = JSON.parse(localStorage.getItem(storage.clients) || '[]');
+  clients.splice(i,1);
+  localStorage.setItem(storage.clients, JSON.stringify(clients));
+  loadClients();
+  setClientForm({});
+}
+
+/* ==== NUMBERS & DATES ==== */
+function autoSetup() {
+  $('#invDate').value = DateTime.now().toISODate();
+  $('#dueDate').value = DateTime.now().plus({days:7}).toISODate();
+  ensureNumberFor('TAX_INVOICE');
+  applyDefaultNote();
+}
+
+function ensureNumberFor(type) {
+  const cfg = numberConfig[type];
+  if (!$('#invNumber').value.trim()) {
+    const n = +localStorage.getItem(cfg.key) || 1;
+    $('#invNumber').value = cfg.prefix + String(n).padStart(4,'0');
   }
 }
-$('#docType').onchange = () => { setNumber(); applyNote(); };
 
-function applyNote() {
+function nextNumber(type) {
+  const cfg = numberConfig[type];
+  const n = +localStorage.getItem(cfg.key) || 1;
+  return cfg.prefix + String(n).padStart(4,'0');
+}
+
+function incrementCounter(type) {
+  const cfg = numberConfig[type];
+  localStorage.setItem(cfg.key, String(+localStorage.getItem(cfg.key) + 1));
+}
+
+function applyDefaultNote() {
   if (['QUOTE','PRO_FORMA'].includes($('#docType').value) && !$('#notes').value.trim()) {
     $('#notes').value = 'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies';
   }
 }
 
-function addItem(d='',q=1,p=0,m=0) {
+/* ==== ITEMS & TOTALS ==== */
+function addItem(desc='', qty=1, base=0, markup=0) {
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td data-label="Desc"><input class="desc" value="${d}"></td>
-    <td data-label="Qty"><input class="qty" type="number" step="0.01" value="${q}"></td>
-    <td data-label="Price"><input class="price" type="number" step="0.01" value="${p}"></td>
-    <td data-label="Markup"><input class="markup" type="number" step="0.01" value="${m}"></td>
-    <td class="right lineTotal">R 0.00</td>
-    <td><button class="btn outline" style="padding:8px 12px;">X</button></td>`;
-  $('#itemsBody').appendChild(tr);
-  tr.querySelectorAll('input').forEach(i => i.oninput = updateTotals);
-  tr.querySelector('button').onclick = () => { tr.remove(); updateTotals(); };
+  tr.innerHTML = `
+    <td data-label="Description"><input class="desc" value="${desc}" placeholder="Description"></td>
+    <td data-label="Qty"><input class="qty" type="number" step="0.01" value="${qty}"></td>
+    <td data-label="Unit price"><input class="price" type="number" step="0.01" value="${base}"></td>
+    <td data-label="Markup %"><input class="markup markup-col" type="number" step="0.01" value="${markup}"></td>
+    <td data-label="Line total" class="right lineTotal">R 0.00</td>
+    <td data-label="Actions"><button class="btn outline del">X</button></td>
+  `;
+  itemsBody().appendChild(tr);
+  tr.querySelectorAll('input').forEach(el => el.oninput = updateTotals);
+  tr.querySelector('.del').onclick = () => { tr.remove(); updateTotals(); };
 }
-$('#addItem').onclick = () => addItem();
 
-function calculate() {
-  const vatRate = +$('#vatRate').value / 100 || 0;
-  const discRate = +$('#discountRate').value / 100 || 0;
-  let subtotal = 0;
-  const rows = $$('#itemsBody tr');
-  rows.forEach(tr => {
-    const qty = +tr.querySelector('.qty').value || 0;
-    const price = +tr.querySelector('.price').value || 0;
-    const markup = +tr.querySelector('.markup').value / 100 || 0;
-    const total = qty * price * (1 + markup) * (1 + vatRate);
-    subtotal += total;
-    tr.querySelector('.lineTotal').textContent = fmt(total, $('#currency').value);
+function gatherItems() {
+  return $$('#itemsBody tr').map(tr => {
+    const desc = tr.querySelector('.desc').value.trim();
+    const qty = parseFloat(tr.querySelector('.qty').value) || 0;
+    const base = parseFloat(tr.querySelector('.price').value) || 0;
+    const markup = parseFloat(tr.querySelector('.markup').value) || 0;
+    const vatRate = parseFloat($('#vatRate').value) || 0;
+    const priceIncl = base * (1 + vatRate/100) * (1 + markup/100);
+    const total = qty * priceIncl;
+    return {desc, qty, base, markup, priceIncl, total};
+  }).filter(i => i.desc || i.qty || i.base);
+}
+
+function updateTotals() {
+  const items = gatherItems();
+  const subtotal = items.reduce((s,i) => s + i.total, 0);
+  const discountRate = parseFloat($('#discountRate').value) || 0;
+  const discount = subtotal * (discountRate / 100);
+  const taxable = Math.max(0, subtotal - discount);
+  const vatRate = parseFloat($('#vatRate').value) || 0;
+  const vat = taxable * (vatRate / 100);
+  const grand = taxable + vat;
+  const cur = $('#currency').value;
+
+  $$('#itemsBody tr').forEach((tr,i) => {
+    tr.querySelector('.lineTotal').textContent = fmt(items[i]?.total || 0, cur);
   });
-  const discount = subtotal * discRate;
-  const afterDisc = subtotal - discount;
-  const vat = afterDisc * vatRate;
-  const grand = afterDisc + vat;
-  $('#subtotal').textContent = fmt(subtotal, $('#currency').value);
-  $('#vat').textContent = fmt(vat, $('#currency').value);
-  $('#grand').textContent = fmt(grand, $('#currency').value);
-  return {subtotal, discount, vat, grand, rows};
+  $('#subtotal').textContent = fmt(subtotal, cur);
+  $('#vat').textContent = fmt(vat, cur);
+  $('#grand').textContent = fmt(grand, cur);
 }
-$('#vatRate,#discountRate,#currency').oninput = calculate;
-document.addEventListener('input', e => { if (e.target.matches('#itemsBody input')) calculate(); });
 
-function getData() {
-  const calc = calculate();
+/* ==== FORM READ/WRITE ==== */
+function readForm() {
+  const items = gatherItems();
+  const subtotal = items.reduce((s,i) => s + i.total, 0);
+  const discount = subtotal * (parseFloat($('#discountRate').value)||0)/100;
+  const taxable = Math.max(0, subtotal - discount);
+  const vat = taxable * (parseFloat($('#vatRate').value)||0)/100;
+  const grand = taxable + vat;
+
   return {
     type: $('#docType').value,
-    number: $('#invNumber').value || $('#invNumber').value = prefixes[$('#docType').value] + String(+localStorage.getItem('c_'+$('#docType').value)).padStart(4,'0'),
-    date: $('#invDate').value,
-    due: $('#dueDate').value,
-    po: $('#customerPO').value,
+    invNumber: $('#invNumber').value.trim(),
+    invDate: $('#invDate').value,
+    dueDate: $('#dueDate').value,
+    customerPO: $('#customerPO').value.trim(),
     currency: $('#currency').value,
-    company: $('#clientCompany').value,
-    rep: $('#clientRep').value,
-    address: $('#clientAddress').value,
-    email: $('#clientEmail').value,
-    notes: $('#notes').value,
-    payLink: $('#payLink').value,
-    items: calc.rows.map(tr => ({
-      desc: tr.querySelector('.desc').value,
-      qty: +tr.querySelector('.qty').value,
-      price: +tr.querySelector('.price').value,
-      markup: +tr.querySelector('.markup').value
-    })),
-    totals: {subtotal: calc.subtotal, discount: calc.discount, vat: calc.vat, grand: calc.grand}
+    vatRate: parseFloat($('#vatRate').value) || 15,
+    discountRate: parseFloat($('#discountRate').value) || 0,
+    payLink: $('#payLink').value.trim(),
+    notes: $('#notes').value.trim(),
+    company: $('#clientCompany').value.trim(),
+    rep: $('#clientRep').value.trim(),
+    vat: $('#clientVAT').value.trim(),
+    email: $('#clientEmail').value.trim(),
+    address: $('#clientAddress').value.trim(),
+    bizVAT: $('#bizVAT').value.trim(),
+    items: items.map(i => ({d:i.desc, q:i.qty, b:i.base, m:i.markup})),
+    totals: {subtotal, discount, vat, grand},
+    savedAt: Date.now()
   };
 }
 
-$('#saveBtn').onclick = () => {
-  const data = getData();
-  let docs = JSON.parse(localStorage.getItem('docs')||'[]');
-  docs = docs.filter(d => !(d.type===data.type && d.number===data.number));
-  docs.push({...data, savedAt: Date.now()});
-  localStorage.setItem('docs', JSON.stringify(docs));
-  localStorage.setItem('c_'+data.type, String(+localStorage.getItem('c_'+data.type)+1));
-  alert('Saved ' + data.number);
-};
+function writeForm(doc) {
+  $('#docType').value = doc.type || 'TAX_INVOICE';
+  $('#invNumber').value = doc.invNumber || '';
+  $('#invDate').value = doc.invDate || '';
+  $('#dueDate').value = doc.dueDate || '';
+  $('#customerPO').value = doc.customerPO || '';
+  $('#currency').value = doc.currency || 'ZAR';
+  $('#vatRate').value = doc.vatRate || 15;
+  $('#discountRate').value = doc.discountRate || 0;
+  $('#payLink').value = doc.payLink || '';
+  $('#notes').value = doc.notes || '';
+  $('#clientCompany').value = doc.company || '';
+  $('#clientRep').value = doc.rep || '';
+  $('#clientVAT').value = doc.vat || '';
+  $('#clientEmail').value = doc.email || '';
+  $('#clientAddress').value = doc.address || '';
+  $('#bizVAT').value = doc.bizVAT || '';
 
-$('#pdfBtn').onclick = () => downloadPDF(getData());
-async function downloadPDF(d) {
+  itemsBody().innerHTML = '';
+  (doc.items || []).forEach(i => addItem(i.d || '', i.q || 1, i.b || 0, i.m || 0));
+  if ((!doc.items || doc.items.length === 0)) { addItem(); addItem(); }
+  updateTotals();
+  applyDefaultNote();
+}
+
+/* ==== SAVE & CONVERT ==== */
+function saveDoc(doc) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(storage.docs) || '[]'); } catch(e) {}
+  const idx = list.findIndex(d => d.type === doc.type && d.invNumber === doc.invNumber);
+  if (idx >= 0) list[idx] = doc; else list.push(doc);
+  localStorage.setItem(storage.docs, JSON.stringify(list));
+}
+
+function onSaveClick() {
+  let doc = readForm();
+  if (!doc.invNumber) {
+    doc.invNumber = nextNumber(doc.type);
+    $('#invNumber').value = doc.invNumber;
+  }
+  saveDoc(doc);
+  incrementCounter(doc.type);
+  alert('Saved as ' + doc.invNumber);
+  resetFormForNext(doc.type);
+}
+
+function resetFormForNext(type) {
+  $('#docType').value = type;
+  $('#invNumber').value = nextNumber(type);
+  $('#invDate').value = DateTime.now().toISODate();
+  $('#dueDate').value = DateTime.now().plus({days:7}).toISODate();
+  $('#customerPO').value = '';
+  $('#discountRate').value = 0;
+  $('#payLink').value = '';
+  $('#notes').value = '';
+  $('#clientCompany').value = $('#clientRep').value = $('#clientVAT').value = $('#clientEmail').value = $('#clientAddress').value = '';
+  itemsBody().innerHTML = '';
+  addItem(); addItem();
+  updateTotals();
+  applyDefaultNote();
+}
+
+async function onConvertToInvoice() {
+  const current = readForm();
+  if (!current.company) return alert('Add client first');
+  saveDoc(current);
+  const newDoc = {...current, type: 'TAX_INVOICE'};
+  newDoc.invNumber = nextNumber('TAX_INVOICE');
+  newDoc.invDate = DateTime.now().toISODate();
+  newDoc.dueDate = DateTime.now().plus({days:7}).toISODate();
+  newDoc.notes = (current.notes ? current.notes + '\n\n' : '') + `Converted from ${current.type === 'QUOTE' ? 'Quote' : 'Pro forma'} ${current.invNumber}`;
+  writeForm(newDoc);
+  await downloadPDF();
+  saveDoc(readForm());
+  incrementCounter('TAX_INVOICE');
+  alert('Converted to Tax Invoice ' + newDoc.invNumber);
+}
+
+/* ==== EMAIL ==== */
+function onEmailClick() {
+  let doc = readForm();
+  if (!doc.invNumber) {
+    doc.invNumber = nextNumber(doc.type);
+    $('#invNumber').value = doc.invNumber;
+  }
+  saveDoc(doc);
+  incrementCounter(doc.type);
+
+  const label = doc.type === 'QUOTE' ? 'Quote' : doc.type === 'PRO_FORMA' ? 'Pro forma invoice' : 'Tax invoice';
+  const notesText = doc.notes || (doc.type !== 'TAX_INVOICE' ? 
+    'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies' : 
+    'Thank you for your business.');
+
+  const body = encodeURIComponent(
+`Hi ${doc.rep || doc.company || 'there'},
+
+Please find attached ${label} ${doc.invNumber}.
+
+${doc.customerPO ? `Customer PO: ${doc.customerPO}\n` : ''}
+Total due: ${fmt(doc.totals.grand, doc.currency)} (incl. VAT)
+
+${doc.payLink ? `Pay online: ${doc.payLink}\n` : ''}
+${notesText}
+
+Kind regards,
+Nico's Auto & Agri
+Tel: 079 568 1706 / 067 277 0183
+nicosauto@outlook.com`.trim());
+
+  location.href = `mailto:${doc.email}?subject=${encodeURIComponent(label + ' ' + doc.invNumber + ' - Nico’s Auto & Agri')}&body=${body}`;
+}
+
+/* ==== RECORDS VIEW ==== */
+function refreshRecords() {
+  const search = ($('#searchBox').value || '').toLowerCase();
+  let docs = [];
+  try { docs = JSON.parse(localStorage.getItem(storage.docs) || '[]'); } catch(e) {}
+  docs.sort((a,b) => (b.savedAt || 0) - (a.savedAt || 0));
+
+  ['QUOTE', 'PRO_FORMA', 'TAX_INVOICE'].forEach(type => {
+    const tbody = $(type === 'QUOTE' ? '#tblQuotes' : type === 'PRO_FORMA' ? '#tblProforma' : '#tblTax').querySelector('tbody');
+    tbody.innerHTML = '';
+    docs.filter(d => d.type === type).forEach(d => {
+      const match = [d.invNumber, d.company, d.rep, String(d.totals?.grand)].some(s => (s||'').toLowerCase().includes(search));
+      if (search && !match) return;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${d.invNumber}</td><td>${d.invDate}</td><td>${clientLabel(d)}</td><td class="right">${fmt(d.totals?.grand || 0, d.currency)}</td><td><button class="btn outline openDoc">Open</button></td>`;
+      tr.querySelector('.openDoc').onclick = () => {
+        showView('create');
+        writeForm(d);
+      };
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+/* ==== PDF GENERATION — NOW FIXED & PERFECT ==== */
+async function downloadPDF() {
+  const data = readForm();
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const w = doc.internal.pageSize.getWidth();
-  const m = 20;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 20;
 
   // Header
-  doc.setFillColor(15,123,108);
-  doc.rect(0,0,w,50,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(22);
-  doc.text(d.type==='QUOTE'?'QUOTE':d.type==='PRO_FORMA'?'PRO FORMA INVOICE':'TAX INVOICE', m, 35);
-  doc.setFontSize(16);
-  doc.text(d.number, w-m-doc.getTextWidth(d.number), 35);
+  doc.setFillColor(15, 123, 108);
+  doc.rect(0, 0, pageWidth, 60, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(26);
+  doc.text(data.type === 'QUOTE' ? 'QUOTE' : data.type === 'PRO_FORMA' ? 'PRO FORMA INVOICE' : 'TAX INVOICE', margin, 40);
+  doc.setFontSize(18);
+  doc.text(data.invNumber, pageWidth - margin - doc.getTextWidth(data.invNumber), 40);
 
-  // Logo & Details
+  // Logo & Company
+  let y = 70;
   try {
-    const img = document.querySelector('#logo');
-    if (img && img.complete) doc.addImage(img, 'PNG', m, 60, 45, 45);
+    const img = document.getElementById('logo');
+    if (img && img.naturalWidth) doc.addImage(img, 'PNG', margin, y, 50, 50);
   } catch(e) {}
-  doc.setTextColor(0,0,0);
-  doc.setFontSize(16); doc.text("Nico’s Auto & Agri", m+55, 75);
+  doc.setTextColor(0);
+  doc.setFontSize(16);
+  doc.text("Nico’s Auto & Agri", margin + 60, y + 10);
   doc.setFontSize(10);
-  doc.text("98 Diemeer Str, Welgelegen, Polokwane, 0699", m+55, 85);
-  doc.text("Tel: 079 568 1706 / 067 277 0183 • nicosauto@outlook.com", m+55, 93);
+  doc.text("98 Diemeer Str, Welgelegen, Polokwane, 0699", margin + 60, y + 20);
+  doc.text("Tel: 079 568 1706 / 067 277 0183", margin + 60, y + 30);
+  doc.text("nicosauto@outlook.com", margin + 60, y + 38);
 
+  // Bill To
   doc.setFontSize(12);
-  doc.text("Bill to:", 120, 75);
-  doc.text(d.company, 120, 85);
-  if (d.rep) doc.text("Attn: " + d.rep, 120, 95);
-  if (d.address) doc.text(d.address.split('\n')[0], 120, 105);
+  doc.text("Bill to:", 120, y);
+  doc.text(data.company || '', 120, y + 12);
+  if (data.rep) doc.text("Attn: " + data.rep, 120, y + 22);
+  if (data.address) doc.text(data.address.split('\n')[0], 120, y + 32);
 
   // Items Table
-  const tableRows = d.items.map(i => [
-    i.desc,
-    i.qty,
-    fmt(i.price * (1 + i.markup/100), d.currency),
-    fmt(i.qty * i.price * (1 + i.markup/100) * (1 + +$('#vatRate').value/100), d.currency)
+  const tableData = data.items.map(i => [
+    i.d,
+    i.q,
+    fmt(i.b * (1 + i.m/100), data.currency),
+    fmt(i.total, data.currency)
   ]);
 
   doc.autoTable({
-    startY: 120,
-    head: [['Description', 'Qty', 'Unit Price', 'Total']],
-    body: tableRows,
+    startY: y + 60,
+    head: [['Description', 'Qty', 'Unit Price (ex VAT + markup)', 'Line Total (incl VAT)']],
+    body: tableData,
     theme: 'striped',
-    headStyles: {fillColor: [15,123,108]},
-    styles: {fontSize: 10}
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [15, 123, 108] }
   });
 
-  const y = doc.lastAutoTable.finalY + 15;
+  const finalY = doc.lastAutoTable.finalY + 20;
   doc.setFontSize(12);
-  doc.text("Subtotal: " + fmt(d.totals.subtotal, d.currency), w-m-80, y);
-  if (d.totals.discount) doc.text("Discount: -" + fmt(d.totals.discount, d.currency), w-m-80, y+10);
-  doc.text("VAT: " + fmt(d.totals.vat, d.currency), w-m-80, y+20);
+  doc.text("Subtotal: " + fmt(data.totals.subtotal, data.currency), pageWidth - margin - 80, finalY);
+  if (data.totals.discount > 0) doc.text("Discount: -" + fmt(data.totals.discount, data.currency), pageWidth - margin - 80, finalY + 10);
+  doc.text("VAT: " + fmt(data.totals.vat, data.currency), pageWidth - margin - 80, finalY + (data.totals.discount > 0 ? 20 : 10));
   doc.setFontSize(16);
-  doc.text("TOTAL: " + fmt(d.totals.grand, d.currency), w-m-80, y+40);
+  doc.text("TOTAL: " + fmt(data.totals.grand, data.currency), pageWidth - margin - 80, finalY + 40);
 
-  const note = d.notes || (d.type!=='TAX_INVOICE' ? 'Quote valid for 7 days • 5-day warranty • 2.5% card fee' : 'Thank you');
+  const note = data.notes || (data.type !== 'TAX_INVOICE' ? 'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies' : '');
+  if (note) doc.setFontSize(10), doc.text(doc.splitTextToSize(note, pageWidth - 40), margin, finalY + 60);
+
   doc.setFontSize(10);
-  doc.text(doc.splitTextToSize(note, w-40), m, y+60);
+  doc.text("Banking Details: IC Schutte • Capitec Savings • Acc: 1680306187 • Branch: 470010", margin, doc.internal.pageSize.getHeight() - 40);
 
-  doc.setFontSize(9);
-  doc.text("Banking: IC Schutte • Capitec Savings • 1680306187 • Branch 470010", m, doc.internal.pageSize.getHeight()-20);
-
-  doc.save(d.number + '.pdf');
+  doc.save(data.invNumber + '.pdf');
 }
-
-// Init
-$('#invDate').value = $('#dueDate').value = DateTime.now().toISODate();
-setNumber(); applyNote(); addItem(); addItem(); calculate();
 </script>
 </body>
 </html>
