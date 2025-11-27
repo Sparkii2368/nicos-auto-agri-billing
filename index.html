@@ -264,8 +264,7 @@
     <div class="row">
       <div class="col-6">
         <label for="notes">Notes</label>
-        <textarea id="notes" placeholder="valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies',
-  M,."></textarea>
+        <textarea id="notes" placeholder="valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies.' "></textarea>
         <label for="payLink">Payment link (optional)</label>
         <input id="payLink" placeholder="https://pay.yourdomain.co.za/invoice/..." />
       </div>
@@ -764,7 +763,6 @@ function openEmailDraft(inv){
     inv.payLink ? `Pay online: ${inv.payLink}` : '',
     '',
     inv.notes || 'valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies',
-  M,',
     '',
     `${inv.bizName||''}`,
   ].filter(Boolean).join('\n'));
