@@ -762,7 +762,7 @@ function openEmailDraft(inv){
     `Total: ${money(inv.totals.grand, inv.currency)} (VAT ${inv.vatRate}% included)`,
     inv.payLink ? `Pay online: ${inv.payLink}` : '',
     '',
-    inv.notes || 'Quote valid for 7 days • 5-day warranty on mechanical parts • 2.5% card payment fee applies' : 'Thank you for your business.',
+    inv.notes || (inv.type === 'QUOTE' ? 'Payment to be made in 7 days',
     '',
     `${inv.bizName||''}`,
   ].filter(Boolean).join('\n'));
